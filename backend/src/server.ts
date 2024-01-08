@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import mysql, { Connection } from "mysql2";
 import dotenv from "dotenv";
+import { drizzle } from "drizzle-orm/mysql2";
 
 dotenv.config();
 
