@@ -1,15 +1,15 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "b1599934-0e6f-4a78-a332-10fc1c5c99b4",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5e51aa2c-7724-4ad4-8458-45818d1a3ea0",
+  "prevId": "b1599934-0e6f-4a78-a332-10fc1c5c99b4",
   "tables": {
     "days": {
       "name": "days",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
@@ -53,7 +53,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
@@ -118,7 +118,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
@@ -189,7 +189,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
@@ -240,7 +240,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
@@ -284,7 +284,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true

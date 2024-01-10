@@ -8,8 +8,8 @@ CREATE TABLE `days` (
 --> statement-breakpoint
 CREATE TABLE `meals` (
 	`id` serial AUTO_INCREMENT NOT NULL,
-	`meal_no` serial AUTO_INCREMENT,
-	`day_id` serial AUTO_INCREMENT,
+	`meal_no` int,
+	`day_id` int,
 	`proteins` int,
 	`calories` int,
 	CONSTRAINT `meals_id` PRIMARY KEY(`id`)
@@ -17,8 +17,8 @@ CREATE TABLE `meals` (
 --> statement-breakpoint
 CREATE TABLE `meals_recipes` (
 	`id` serial AUTO_INCREMENT NOT NULL,
-	`meal_id` serial AUTO_INCREMENT,
-	`recipe_id` serial AUTO_INCREMENT,
+	`meal_id` int,
+	`recipe_id` int,
 	`qty` int,
 	CONSTRAINT `meals_recipes_id` PRIMARY KEY(`id`)
 );
@@ -42,8 +42,8 @@ CREATE TABLE `recipes` (
 --> statement-breakpoint
 CREATE TABLE `recipes_raw_items` (
 	`id` serial AUTO_INCREMENT NOT NULL,
-	`recipe_id` serial AUTO_INCREMENT,
-	`raw_items_id` serial AUTO_INCREMENT,
+	`recipe_id` int,
+	`raw_items_id` int,
 	`qty` int,
 	CONSTRAINT `recipes_raw_items_id` PRIMARY KEY(`id`)
 );
