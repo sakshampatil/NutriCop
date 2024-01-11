@@ -9,10 +9,10 @@ const mysql2_2 = __importDefault(require("mysql2"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.connection = mysql2_2.default.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "1234@Abcd",
-    database: "calories_tracker",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     multipleStatements: true,
 });
 exports.db = (0, mysql2_1.drizzle)(exports.connection);

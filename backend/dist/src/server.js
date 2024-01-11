@@ -4,21 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-// const mysql = require("mysql2");
 const dotenv_1 = __importDefault(require("dotenv"));
-// const drizzle = require("drizzle-orm/mysql2");
+const cors_1 = __importDefault(require("cors"));
+const routes_1 = require("./routes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT;
-// const sql = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-//   port: Number(process.env.DB_PORT),
-// });
-// const db = drizzle(sql);
-app.listen(port, () => {
-    console.log("USER", process.env.DB_HOST);
-    console.log("Server is up and running");
+app.use((0, cors_1.default)());
+const port = process.env.PORT || 3000;
+//routes
+(0, routes_1.routes)(app);
+//starting server
+app.listen(port, (err) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(`serving is up and running on port:${port}`);
 });

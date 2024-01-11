@@ -1,24 +1,20 @@
 import express from "express";
-// const mysql = require("mysql2");
 import dotenv from "dotenv";
-// const drizzle = require("drizzle-orm/mysql2");
-
+import cors from "cors"
+import { routes } from "./routes";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+app.use(cors());
+const port = process.env.PORT || 3000;
 
-// const sql = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-//   port: Number(process.env.DB_PORT),
-// });
+//routes
+routes(app);
 
-// const db = drizzle(sql);
-
-app.listen(port, () => {
-  console.log("USER", process.env.DB_HOST);
-  console.log("Server is up and running");
-});
+//starting server
+app.listen(port, (err?: Error) => {
+  if (err) {
+    console.log(err)
+  }
+  console.log(`serving is up and running on port:${port}`)
+})
