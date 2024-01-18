@@ -7,22 +7,25 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "node dist/src/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/migrate.js\"",
-    "migrate:generate": "drizzle-kit generate:mysql",
-    "migrate:push": "node dist/src/migrate.js"
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\"",
+    "db:generate": "drizzle-kit generate:mysql",
+    "db:push": "drizzle-kit push:mysql --config=drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@planetscale/database": "^1.13.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.29.1",
+    "drizzle-orm": "^0.29.3",
     "express": "^4.18.2",
     "mysql2": "^3.6.5",
     "nodemon": "^3.0.2"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.3",

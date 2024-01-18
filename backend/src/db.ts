@@ -1,14 +1,10 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2";
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { connect } from "@planetscale/database";
 
-export const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  multipleStatements: true,
+// create the connection
+export const connection = connect({
+  url: process.env.DATABASE_URL,
 });
 
 export const db = drizzle(connection);

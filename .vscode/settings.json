@@ -14,5 +14,8 @@
       "username": "root",
       "password": "1234@Abcd"
     }
-  ]
+  ],
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  }
 }
