@@ -5,7 +5,7 @@ import { days } from "./days";
 export const meals = mysqlTable("meals", {
   id: int("id").autoincrement().primaryKey(),
   mealNo: int("meal_no"),
-  // dayId: int("day_id").references(() => days.id),
+  dayId: int("day_id").references(() => days.id),
   proteins: int("proteins"),
   calories: int("calories"),
 });
