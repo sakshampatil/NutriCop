@@ -1,6 +1,6 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import cors from "cors"
+import cors from "cors";
 import { routes } from "./routes";
 dotenv.config();
 
@@ -14,7 +14,7 @@ routes(app);
 //starting server
 app.listen(port, (err?: Error) => {
   if (err) {
-    console.log(err)
+    console.log(err);
   }
-  console.log(`serving is up and running on port:${port}`)
-})
+  console.log(`serving is up and running on port:${port}`);
+});

@@ -4,11 +4,11 @@ import { recipes_raw_items } from "./recipes";
 
 export const raw_items = mysqlTable("raw_items", {
   id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 50 }),
-  unit: varchar("name", { length: 50 }),
+  name: varchar("name", { length: 50 }).notNull(),
+  unit: varchar("unit", { length: 50 }),
   perQty: decimal("per_qty", { precision: 1 }),
-  proteins: int("proteins"),
-  calories: int("calories"),
+  proteins: int("proteins").notNull(),
+  calories: int("calories").notNull(),
 });
 
 export const rawItemsrelations = relations(raw_items, ({ one }) => ({

@@ -7,10 +7,10 @@ const days_1 = require("./days");
 const drizzle_orm_1 = require("drizzle-orm");
 exports.meals = (0, mysql_core_1.mysqlTable)("meals", {
     id: (0, mysql_core_1.int)("id").autoincrement().primaryKey(),
-    mealNo: (0, mysql_core_1.int)("meal_no"),
-    dayId: (0, mysql_core_1.int)("day_id"),
-    proteins: (0, mysql_core_1.int)("proteins"),
-    calories: (0, mysql_core_1.int)("calories"),
+    mealNo: (0, mysql_core_1.int)("meal_no").notNull(),
+    dayId: (0, mysql_core_1.int)("day_id").notNull(),
+    proteins: (0, mysql_core_1.int)("proteins").notNull(),
+    calories: (0, mysql_core_1.int)("calories").notNull(),
 });
 exports.mealsRelations = (0, drizzle_orm_1.relations)(exports.meals, ({ many, one }) => ({
     mealsRecipies: many(exports.meals_recipes),
@@ -21,9 +21,9 @@ exports.mealsRelations = (0, drizzle_orm_1.relations)(exports.meals, ({ many, on
 }));
 exports.meals_recipes = (0, mysql_core_1.mysqlTable)("meals_recipes", {
     id: (0, mysql_core_1.int)("id").autoincrement().primaryKey(),
-    mealId: (0, mysql_core_1.int)("meal_id"),
-    recipeId: (0, mysql_core_1.int)("recipe_id"),
-    qty: (0, mysql_core_1.int)("qty"),
+    mealId: (0, mysql_core_1.int)("meal_id").notNull(),
+    recipeId: (0, mysql_core_1.int)("recipe_id").notNull(),
+    qty: (0, mysql_core_1.int)("qty").notNull(),
 });
 exports.mealsRecipiesRelations = (0, drizzle_orm_1.relations)(exports.meals_recipes, ({ one, many }) => ({
     meals: one(exports.meals, {

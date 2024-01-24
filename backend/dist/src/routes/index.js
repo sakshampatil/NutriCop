@@ -12,7 +12,7 @@ const routes = (app) => {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
     app.use((0, cookie_parser_1.default)());
-    app.use("api/v1/rawItems", rawItems_1.default);
+    app.use("/api/v1/rawItems", rawItems_1.default);
     app.use((err, req, res, next) => {
         (0, errorHandler_1.useErrorHandler)(err, res);
     });

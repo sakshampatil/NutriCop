@@ -16,13 +16,16 @@ type NewRawItem = typeof raw_items.$inferInsert;
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const params = req.body as NewRawItem;
-    if (!params?.name || !params?.unit || !params?.proteins || !params?.calories) {
+    console.log("PARAM = ", params);
+    if (!params?.name || !params?.proteins || !params?.calories) {
       throw new BadRequest("Bad Request!");
     }
 
-    const insertUser = db.insert(raw_items).values(params);
-    responseHandler(res, insertUser);
+    const insertRawItem = await db.insert(raw_items).values(params);
+    responseHandler(res, insertRawItem);
   } catch (err) {
+    console.log("ERR = ", err);
+
     next(err);
   }
 };
