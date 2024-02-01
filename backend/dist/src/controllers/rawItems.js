@@ -8,11 +8,11 @@ const responseHandler_1 = require("../service/responseHandler");
 const drizzle_orm_1 = require("drizzle-orm");
 const create = async (req, res, next) => {
     try {
-        const params = req.body;
-        if (!(params === null || params === void 0 ? void 0 : params.name) || !(params === null || params === void 0 ? void 0 : params.proteins) || !(params === null || params === void 0 ? void 0 : params.calories)) {
+        const body = req.body;
+        if (!(body === null || body === void 0 ? void 0 : body.name) || !(body === null || body === void 0 ? void 0 : body.proteins) || !(body === null || body === void 0 ? void 0 : body.calories)) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
-        const insertRawItem = await db_1.db.insert(raw_items_1.raw_items).values(params);
+        const insertRawItem = await db_1.db.insert(raw_items_1.raw_items).values(body);
         (0, responseHandler_1.responseHandler)(res, insertRawItem);
     }
     catch (err) {

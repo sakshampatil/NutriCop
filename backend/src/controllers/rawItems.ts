@@ -11,18 +11,17 @@ import {
 import { raw_items } from "../schema/raw_items";
 import { responseHandler } from "../service/responseHandler";
 import { eq, like } from "drizzle-orm";
-import { it } from "node:test";
 
 type NewRawItem = typeof raw_items.$inferInsert;
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const params = req.body as NewRawItem;
-    if (!params?.name || !params?.proteins || !params?.calories) {
+    const body = req.body as NewRawItem;
+    if (!body?.name || !body?.proteins || !body?.calories) {
       throw new BadRequest("Bad Request!");
     }
 
-    const insertRawItem = await db.insert(raw_items).values(params);
+    const insertRawItem = await db.insert(raw_items).values(body);
     responseHandler(res, insertRawItem);
   } catch (err) {
     next(err);
