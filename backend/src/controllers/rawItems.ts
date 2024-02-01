@@ -10,7 +10,7 @@ import {
 } from "../service/errorHandler";
 import { raw_items } from "../schema/raw_items";
 import { responseHandler } from "../service/responseHandler";
-import { eq } from "drizzle-orm";
+import { eq, like } from "drizzle-orm";
 import { it } from "node:test";
 
 type NewRawItem = typeof raw_items.$inferInsert;
@@ -32,15 +32,11 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 export const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body: any = req.body;
-    console.log("REQUEST = ", body);
     const params: any = req.params;
-    let updateBody = {
-      name: body.name,
-    };
-    const rawItem = await db
-      .update(raw_items)
-      .set({ perQty: body.perQty })
-      .where(eq(raw_items.id, params.id));
+    if (!params.id || !body) {
+      throw new BadRequest("Bad Request!");
+    }
+    const rawItem = await db.update(raw_items).set(body).where(eq(raw_items.id, params.id));
     responseHandler(res, rawItem);
   } catch (err) {
     next(err);
@@ -49,8 +45,17 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const params: any = req.query;
-    const items = await db.query.raw_items.findMany();
+    const query: any = req.query;
+    console.log("query = ", query.search);
+    let items = {};
+    if (query.search) {
+      items = await db
+        .select()
+        .from(raw_items)
+        .where(like(raw_items.name, `%${query.search}%`));
+    } else {
+      items = await db.query.raw_items.findMany();
+    }
     responseHandler(res, items);
   } catch (err) {
     next(err);
@@ -60,6 +65,9 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
 export const deleteItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const params: any = req.params;
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
     const item = await db.delete(raw_items).where(eq(raw_items.id, params.id));
     responseHandler(res, item);
   } catch (err) {

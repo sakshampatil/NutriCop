@@ -11,6 +11,10 @@ exports.raw_items = (0, mysql_core_1.mysqlTable)("raw_items", {
     perQty: (0, mysql_core_1.int)("per_qty"),
     proteins: (0, mysql_core_1.int)("proteins").notNull(),
     calories: (0, mysql_core_1.int)("calories").notNull(),
+}, (table) => {
+    return {
+        nameidx: (0, mysql_core_1.uniqueIndex)("name_idx").on(table.name),
+    };
 });
 exports.rawItemsrelations = (0, drizzle_orm_1.relations)(exports.raw_items, ({ one }) => ({
     recipesRawItems: one(recipes_1.recipes_raw_items, {

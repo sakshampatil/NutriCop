@@ -3,9 +3,9 @@ import { create, deleteItem, list, update } from "../controllers/rawItems";
 
 const router = Router();
 
-router.route("/").post(create);
-router.route("/:id").put(update);
-router.route("/").get(list);
-router.route("/:id").delete(deleteItem);
+router.route("/create").post(create);
+router.route("/update/:id").put(update);
+router.route("/list").get(list);
+router.route("/delete/:id").delete(deleteItem);
 
 export default router;
