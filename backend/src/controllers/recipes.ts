@@ -9,7 +9,7 @@ import {
   useErrorHandler,
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
-import { eq, and } from "drizzle-orm";
+import { eq, and, like } from "drizzle-orm";
 import { recipes, recipes_raw_items } from "../schema/recipes";
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,6 +27,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
         let res = await db
           .insert(recipes_raw_items)
           .values({ recipeId: insertRecipe.insertId, ...ele });
+        console.log("REs = ", res);
       });
 
     responseHandler(res, insertRecipe);
@@ -59,6 +60,91 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
           .where(eq(recipes_raw_items.id, ele.recipeRawItemId));
       });
     responseHandler(res, updatedRecipe);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const query = req.query;
+
+    const recipesList = await db.query.recipes.findMany({
+      where: like(recipes.name, `%${query.search}%`),
+      with: {
+        recipesRawItems: {
+          with: {
+            rawItems: true,
+          },
+        },
+      },
+    });
+
+    responseHandler(res, recipesList);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const findBasedOnId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+    const recipe = await db.query.recipes.findFirst({
+      where: eq(recipes.id, Number(params.id)),
+      with: {
+        recipesRawItems: {
+          with: {
+            rawItems: true,
+          },
+        },
+      },
+    });
+
+    responseHandler(res, recipe);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteRecipeRawItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const item = await db
+      .delete(recipes_raw_items)
+      .where(eq(recipes_raw_items.id, Number(params.id)));
+
+    responseHandler(res, item);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const recipe = await db.delete(recipes).where(eq(recipes.id, Number(params.id)));
+    await db.delete(recipes_raw_items).where(eq(recipes_raw_items.recipeId, Number(params.id)));
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const listRawItems = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let recipesList = {};
+    recipesList = await db.query.recipes_raw_items.findMany({});
+    responseHandler(res, recipesList);
   } catch (err) {
     next(err);
   }

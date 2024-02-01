@@ -38,17 +38,13 @@ exports.update = update;
 const list = async (req, res, next) => {
     try {
         const query = req.query;
-        console.log("query = ", query.search);
-        let items = {};
-        if (query.search) {
-            items = await db_1.db
-                .select()
-                .from(raw_items_1.raw_items)
-                .where((0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`));
-        }
-        else {
-            items = await db_1.db.query.raw_items.findMany();
-        }
+        // const items = await db
+        //   .select()
+        //   .from(raw_items)
+        //   .where(like(raw_items.name, `%${query.search}%`));
+        const items = await db_1.db.query.raw_items.findMany({
+            where: (0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`),
+        });
         (0, responseHandler_1.responseHandler)(res, items);
     }
     catch (err) {

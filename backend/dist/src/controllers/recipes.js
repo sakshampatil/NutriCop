@@ -11,7 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.update = exports.create = void 0;
+exports.listRawItems = exports.deleteRecipe = exports.deleteRecipeRawItem = exports.findBasedOnId = exports.list = exports.update = exports.create = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const responseHandler_1 = require("../service/responseHandler");
@@ -29,6 +29,7 @@ const create = async (req, res, next) => {
                 let res = await db_1.db
                     .insert(recipes_1.recipes_raw_items)
                     .values(Object.assign({ recipeId: insertRecipe.insertId }, ele));
+                console.log("REs = ", res);
             });
         (0, responseHandler_1.responseHandler)(res, insertRecipe);
     }
@@ -63,3 +64,87 @@ const update = async (req, res, next) => {
     }
 };
 exports.update = update;
+const list = async (req, res, next) => {
+    try {
+        const query = req.query;
+        const recipesList = await db_1.db.query.recipes.findMany({
+            where: (0, drizzle_orm_1.like)(recipes_1.recipes.name, `%${query.search}%`),
+            with: {
+                recipesRawItems: {
+                    with: {
+                        rawItems: true,
+                    },
+                },
+            },
+        });
+        (0, responseHandler_1.responseHandler)(res, recipesList);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.list = list;
+const findBasedOnId = async (req, res, next) => {
+    try {
+        const params = req.params;
+        if (!params.id) {
+            throw new errorHandler_1.BadRequest("Bad Request!");
+        }
+        const recipe = await db_1.db.query.recipes.findFirst({
+            where: (0, drizzle_orm_1.eq)(recipes_1.recipes.id, Number(params.id)),
+            with: {
+                recipesRawItems: {
+                    with: {
+                        rawItems: true,
+                    },
+                },
+            },
+        });
+        (0, responseHandler_1.responseHandler)(res, recipe);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.findBasedOnId = findBasedOnId;
+const deleteRecipeRawItem = async (req, res, next) => {
+    try {
+        const params = req.params;
+        if (!params.id) {
+            throw new errorHandler_1.BadRequest("Bad Request!");
+        }
+        const item = await db_1.db
+            .delete(recipes_1.recipes_raw_items)
+            .where((0, drizzle_orm_1.eq)(recipes_1.recipes_raw_items.id, Number(params.id)));
+        (0, responseHandler_1.responseHandler)(res, item);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.deleteRecipeRawItem = deleteRecipeRawItem;
+const deleteRecipe = async (req, res, next) => {
+    try {
+        const params = req.params;
+        if (!params.id) {
+            throw new errorHandler_1.BadRequest("Bad Request!");
+        }
+        const recipe = await db_1.db.delete(recipes_1.recipes).where((0, drizzle_orm_1.eq)(recipes_1.recipes.id, Number(params.id)));
+        await db_1.db.delete(recipes_1.recipes_raw_items).where((0, drizzle_orm_1.eq)(recipes_1.recipes_raw_items.recipeId, Number(params.id)));
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.deleteRecipe = deleteRecipe;
+const listRawItems = async (req, res, next) => {
+    try {
+        let recipesList = {};
+        recipesList = await db_1.db.query.recipes_raw_items.findMany({});
+        (0, responseHandler_1.responseHandler)(res, recipesList);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.listRawItems = listRawItems;

@@ -45,16 +45,16 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query: any = req.query;
-    console.log("query = ", query.search);
-    let items = {};
-    if (query.search) {
-      items = await db
-        .select()
-        .from(raw_items)
-        .where(like(raw_items.name, `%${query.search}%`));
-    } else {
-      items = await db.query.raw_items.findMany();
-    }
+
+    // const items = await db
+    //   .select()
+    //   .from(raw_items)
+    //   .where(like(raw_items.name, `%${query.search}%`));
+
+    const items = await db.query.raw_items.findMany({
+      where: like(raw_items.name, `%${query.search}%`),
+    });
+
     responseHandler(res, items);
   } catch (err) {
     next(err);
