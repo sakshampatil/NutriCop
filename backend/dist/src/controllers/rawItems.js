@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.create = void 0;
+exports.deleteItem = exports.list = exports.update = exports.create = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const raw_items_1 = require("../schema/raw_items");
 const responseHandler_1 = require("../service/responseHandler");
+const drizzle_orm_1 = require("drizzle-orm");
 const create = async (req, res, next) => {
     try {
         const params = req.body;
-        console.log("PARAM = ", params);
         if (!(params === null || params === void 0 ? void 0 : params.name) || !(params === null || params === void 0 ? void 0 : params.proteins) || !(params === null || params === void 0 ? void 0 : params.calories)) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
@@ -16,8 +16,48 @@ const create = async (req, res, next) => {
         (0, responseHandler_1.responseHandler)(res, insertRawItem);
     }
     catch (err) {
-        console.log("ERR = ", err);
         next(err);
     }
 };
 exports.create = create;
+const update = async (req, res, next) => {
+    try {
+        const body = req.body;
+        console.log("REQUEST = ", body);
+        const params = req.params;
+        let updateBody = {
+            name: body.name,
+        };
+        const rawItem = await db_1.db
+            .update(raw_items_1.raw_items)
+            .set({ perQty: body.perQty })
+            .where((0, drizzle_orm_1.eq)(raw_items_1.raw_items.id, params.id));
+        (0, responseHandler_1.responseHandler)(res, rawItem);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.update = update;
+const list = async (req, res, next) => {
+    try {
+        const params = req.query;
+        const items = await db_1.db.query.raw_items.findMany();
+        (0, responseHandler_1.responseHandler)(res, items);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.list = list;
+const deleteItem = async (req, res, next) => {
+    try {
+        const params = req.params;
+        const item = await db_1.db.delete(raw_items_1.raw_items).where((0, drizzle_orm_1.eq)(raw_items_1.raw_items.id, params.id));
+        (0, responseHandler_1.responseHandler)(res, item);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.deleteItem = deleteItem;

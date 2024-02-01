@@ -6,7 +6,7 @@ export const raw_items = mysqlTable("raw_items", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 50 }).notNull(),
   unit: varchar("unit", { length: 50 }),
-  perQty: decimal("per_qty", { precision: 1 }),
+  perQty: int("per_qty"),
   proteins: int("proteins").notNull(),
   calories: int("calories").notNull(),
 });

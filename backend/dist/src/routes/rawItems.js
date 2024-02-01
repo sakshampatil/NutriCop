@@ -4,4 +4,7 @@ const express_1 = require("express");
 const rawItems_1 = require("../controllers/rawItems");
 const router = (0, express_1.Router)();
 router.route("/").post(rawItems_1.create);
+router.route("/:id").put(rawItems_1.update);
+router.route("/").get(rawItems_1.list);
+router.route("/:id").delete(rawItems_1.deleteItem);
 exports.default = router;
