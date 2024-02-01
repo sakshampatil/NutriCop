@@ -4,4 +4,5 @@ const express_1 = require("express");
 const recipes_1 = require("../controllers/recipes");
 const router = (0, express_1.Router)();
 router.route("/create").post(recipes_1.create);
+router.route("/update/:id").put(recipes_1.update);
 exports.default = router;
