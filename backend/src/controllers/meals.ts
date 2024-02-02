@@ -100,3 +100,28 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
     next(err);
   }
 };
+
+export const findBasedOnId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const meal = await db.query.meals.findFirst({
+      where: eq(meals.id, Number(params.id)),
+      with: {
+        mealsRecipies: {
+          with: {
+            recipes: true,
+          },
+        },
+      },
+    });
+
+    responseHandler(res, meal);
+  } catch (err) {
+    next(err);
+  }
+};

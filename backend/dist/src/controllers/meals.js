@@ -11,7 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.update = exports.create = void 0;
+exports.findBasedOnId = exports.update = exports.create = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const responseHandler_1 = require("../service/responseHandler");
@@ -95,3 +95,26 @@ const update = async (req, res, next) => {
     }
 };
 exports.update = update;
+const findBasedOnId = async (req, res, next) => {
+    try {
+        const params = req.params;
+        if (!params.id) {
+            throw new errorHandler_1.BadRequest("Bad Request!");
+        }
+        const meal = await db_1.db.query.meals.findFirst({
+            where: (0, drizzle_orm_1.eq)(meals_1.meals.id, Number(params.id)),
+            with: {
+                mealsRecipies: {
+                    with: {
+                        recipes: true,
+                    },
+                },
+            },
+        });
+        (0, responseHandler_1.responseHandler)(res, meal);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.findBasedOnId = findBasedOnId;

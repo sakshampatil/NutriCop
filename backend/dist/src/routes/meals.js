@@ -5,4 +5,5 @@ const meals_1 = require("../controllers/meals");
 const router = (0, express_1.Router)();
 router.route("/create").post(meals_1.create);
 router.route("/update/:id").put(meals_1.update);
+router.route("/list/:id").get(meals_1.findBasedOnId);
 exports.default = router;
