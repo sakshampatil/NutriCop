@@ -23,15 +23,12 @@ const create = async (req, res, next) => {
         if (!body.name || !body.proteins || !body.calories) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
-        const insertRecipe = await db_1.db.insert(recipes_1.recipes).values(body);
+        const insertedRecipe = await db_1.db.insert(recipes_1.recipes).values(body);
         body.rawItems.length > 0 &&
             body.rawItems.map(async (ele) => {
-                let res = await db_1.db
-                    .insert(recipes_1.recipes_raw_items)
-                    .values(Object.assign({ recipeId: insertRecipe.insertId }, ele));
-                console.log("REs = ", res);
+                await db_1.db.insert(recipes_1.recipes_raw_items).values(Object.assign({ recipeId: insertedRecipe.insertId }, ele));
             });
-        (0, responseHandler_1.responseHandler)(res, insertRecipe);
+        (0, responseHandler_1.responseHandler)(res, insertedRecipe);
     }
     catch (err) {
         next(err);

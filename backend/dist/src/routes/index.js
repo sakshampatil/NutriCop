@@ -9,12 +9,14 @@ const errorHandler_1 = require("../service/errorHandler");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const rawItems_1 = __importDefault(require("./rawItems"));
 const recipes_1 = __importDefault(require("./recipes"));
+const meals_1 = __importDefault(require("./meals"));
 const routes = (app) => {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
     app.use((0, cookie_parser_1.default)());
     app.use("/api/v1/rawItems", rawItems_1.default);
     app.use("/api/v1/recipes", recipes_1.default);
+    app.use("/api/v1/meals", meals_1.default);
     app.use((err, req, res, next) => {
         (0, errorHandler_1.useErrorHandler)(err, res);
     });

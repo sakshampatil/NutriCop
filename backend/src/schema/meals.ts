@@ -1,4 +1,4 @@
-import { int, mysqlTable, serial } from "drizzle-orm/mysql-core";
+import { int, mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
 import { recipes } from "./recipes";
 import { days } from "./days";
 import { relations } from "drizzle-orm";
@@ -6,7 +6,7 @@ import { relations } from "drizzle-orm";
 export const meals = mysqlTable("meals", {
   id: int("id").autoincrement().primaryKey(),
   mealNo: int("meal_no").notNull(),
-  dayId: int("day_id").notNull(),
+  day: varchar("day", { length: 10 }).notNull(),
   proteins: int("proteins").notNull(),
   calories: int("calories").notNull(),
 });
@@ -14,8 +14,8 @@ export const meals = mysqlTable("meals", {
 export const mealsRelations = relations(meals, ({ many, one }) => ({
   mealsRecipies: many(meals_recipes),
   days: one(days, {
-    fields: [meals.dayId],
-    references: [days.id],
+    fields: [meals.day],
+    references: [days.day],
   }),
 }));
 

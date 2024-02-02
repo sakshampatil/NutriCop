@@ -8,15 +8,15 @@ const drizzle_orm_1 = require("drizzle-orm");
 exports.meals = (0, mysql_core_1.mysqlTable)("meals", {
     id: (0, mysql_core_1.int)("id").autoincrement().primaryKey(),
     mealNo: (0, mysql_core_1.int)("meal_no").notNull(),
-    dayId: (0, mysql_core_1.int)("day_id").notNull(),
+    day: (0, mysql_core_1.varchar)("day", { length: 10 }).notNull(),
     proteins: (0, mysql_core_1.int)("proteins").notNull(),
     calories: (0, mysql_core_1.int)("calories").notNull(),
 });
 exports.mealsRelations = (0, drizzle_orm_1.relations)(exports.meals, ({ many, one }) => ({
     mealsRecipies: many(exports.meals_recipes),
     days: one(days_1.days, {
-        fields: [exports.meals.dayId],
-        references: [days_1.days.id],
+        fields: [exports.meals.day],
+        references: [days_1.days.day],
     }),
 }));
 exports.meals_recipes = (0, mysql_core_1.mysqlTable)("meals_recipes", {

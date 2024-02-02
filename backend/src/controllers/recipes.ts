@@ -20,17 +20,14 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
       throw new BadRequest("Bad Request!");
     }
 
-    const insertRecipe = await db.insert(recipes).values(body);
+    const insertedRecipe = await db.insert(recipes).values(body);
 
     body.rawItems.length > 0 &&
       body.rawItems.map(async (ele: any) => {
-        let res = await db
-          .insert(recipes_raw_items)
-          .values({ recipeId: insertRecipe.insertId, ...ele });
-        console.log("REs = ", res);
+        await db.insert(recipes_raw_items).values({ recipeId: insertedRecipe.insertId, ...ele });
       });
 
-    responseHandler(res, insertRecipe);
+    responseHandler(res, insertedRecipe);
   } catch (err) {
     next(err);
   }
