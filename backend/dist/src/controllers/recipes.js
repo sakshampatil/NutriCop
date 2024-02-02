@@ -42,7 +42,6 @@ const update = async (req, res, next) => {
         if (!params.id || !req.body) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
-        console.log("req = ", recipeBody);
         const updatedRecipe = await db_1.db
             .update(recipes_1.recipes)
             .set(Object.assign({}, recipeBody))

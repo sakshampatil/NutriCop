@@ -42,8 +42,6 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
       throw new BadRequest("Bad Request!");
     }
 
-    console.log("req = ", recipeBody);
-
     const updatedRecipe = await db
       .update(recipes)
       .set({ ...recipeBody })

@@ -56,3 +56,47 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     next(err);
   }
 };
+
+export const update = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { recipes, ...mealBody } = req.body;
+    const params = req.params;
+
+    if (!params.id || !req.body) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const fetchedMeal = await db.query.meals.findFirst({
+      where: eq(meals.id, Number(params.id)),
+    });
+
+    if (!fetchedMeal) {
+      throw new NotFound("Meal not found!");
+    }
+
+    const updatedMeal = await db
+      .update(meals)
+      .set({ ...mealBody })
+      .where(eq(meals.id, Number(params.id)));
+
+    recipes.length > 0 &&
+      recipes.map(async (ele: any) => {
+        await db
+          .update(meals_recipes)
+          .set({ qty: ele.qty })
+          .where(eq(meals_recipes.id, ele.mealRecipeId));
+      });
+
+    await db
+      .update(days)
+      .set({
+        totalCalories: sql`${days.totalCalories}-${fetchedMeal?.calories}+${mealBody.calories}`,
+        totalProteins: sql`${days.totalProteins}-${fetchedMeal?.proteins}+${mealBody.proteins}`,
+      })
+      .where(eq(days.day, fetchedMeal.day));
+
+    responseHandler(res, updatedMeal);
+  } catch (err) {
+    next(err);
+  }
+};
