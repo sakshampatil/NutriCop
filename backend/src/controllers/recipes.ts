@@ -130,6 +130,7 @@ export const deleteRecipe = async (req: Request, res: Response, next: NextFuncti
 
     const recipe = await db.delete(recipes).where(eq(recipes.id, Number(params.id)));
     await db.delete(recipes_raw_items).where(eq(recipes_raw_items.recipeId, Number(params.id)));
+    responseHandler(res, recipe);
   } catch (err) {
     next(err);
   }

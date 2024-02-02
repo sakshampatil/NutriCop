@@ -125,3 +125,35 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
     next(err);
   }
 };
+
+export const deleteMealRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const recipe = await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
+
+    responseHandler(res, recipe);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteMeal = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.params;
+
+    if (!params.id) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const meal = await db.delete(meals).where(eq(meals.id, Number(params.id)));
+    await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
+
+    responseHandler(res, meal);
+  } catch (err) {
+    next(err);
+  }
+};

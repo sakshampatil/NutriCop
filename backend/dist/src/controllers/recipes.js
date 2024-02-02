@@ -127,6 +127,7 @@ const deleteRecipe = async (req, res, next) => {
         }
         const recipe = await db_1.db.delete(recipes_1.recipes).where((0, drizzle_orm_1.eq)(recipes_1.recipes.id, Number(params.id)));
         await db_1.db.delete(recipes_1.recipes_raw_items).where((0, drizzle_orm_1.eq)(recipes_1.recipes_raw_items.recipeId, Number(params.id)));
+        (0, responseHandler_1.responseHandler)(res, recipe);
     }
     catch (err) {
         next(err);
