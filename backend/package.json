@@ -8,8 +8,8 @@
     "build": "npx tsc",
     "start": "node dist/src/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\"",
-    "db:generate": "drizzle-kit generate:mysql",
-    "db:push": "drizzle-kit push:mysql --config=drizzle.config.ts"
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg --config=drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,8 @@
     "drizzle-orm": "^0.29.3",
     "express": "^4.18.2",
     "mysql2": "^3.6.5",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "postgres": "^3.4.3"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.6",
