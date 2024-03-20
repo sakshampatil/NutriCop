@@ -6,6 +6,6 @@ const router = (0, express_1.Router)();
 router.route("/create").post(meals_1.create);
 router.route("/update/:id").put(meals_1.update);
 router.route("/list/:id").get(meals_1.findBasedOnId);
-router.route("/deleteMealRecipe/:id").delete(meals_1.deleteMealRecipe);
+// router.route("/deleteMealRecipe/:id").delete(deleteMealRecipe);
 router.route("/deleteMeal/:id").delete(meals_1.deleteMeal);
 exports.default = router;

@@ -5,7 +5,7 @@ const router = Router();
 
 router.route("/create").post(create);
 router.route("/update/:id").put(update);
-router.route("/list").get(list);
+router.route("/list/:userId").get(list);
 router.route("/delete/:id").delete(deleteItem);
 
 export default router;

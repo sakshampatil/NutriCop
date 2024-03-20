@@ -7,6 +7,7 @@ const pg_core_1 = require("drizzle-orm/pg-core");
 // import { relations } from "drizzle-orm";
 exports.meals = (0, pg_core_1.pgTable)("meals", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
+    userId: (0, pg_core_1.integer)("userd_id").notNull(),
     mealNo: (0, pg_core_1.integer)("meal_no").notNull(),
     day: (0, pg_core_1.varchar)("day", { length: 10 }).notNull(),
     recipes: (0, pg_core_1.json)("recipes").$type(),

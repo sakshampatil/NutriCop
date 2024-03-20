@@ -7,6 +7,7 @@ const pg_core_1 = require("drizzle-orm/pg-core");
 // import { meals_recipes } from "./meals";
 exports.recipes = (0, pg_core_1.pgTable)("recipes", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
+    userId: (0, pg_core_1.integer)("userd_id").notNull(),
     name: (0, pg_core_1.varchar)("name", { length: 50 }).notNull(),
     raw_items: (0, pg_core_1.json)("raw_items").$type(),
     proteins: (0, pg_core_1.integer)("proteins").notNull(),

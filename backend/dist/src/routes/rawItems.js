@@ -5,6 +5,6 @@ const rawItems_1 = require("../controllers/rawItems");
 const router = (0, express_1.Router)();
 router.route("/create").post(rawItems_1.create);
 router.route("/update/:id").put(rawItems_1.update);
-router.route("/list").get(rawItems_1.list);
+router.route("/list/:userId").get(rawItems_1.list);
 router.route("/delete/:id").delete(rawItems_1.deleteItem);
 exports.default = router;

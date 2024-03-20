@@ -27,5 +27,6 @@ const rawItems = __importStar(require("./raw_items"));
 const recipes = __importStar(require("./recipes"));
 const meals = __importStar(require("./meals"));
 const days = __importStar(require("./days"));
-const schema = Object.assign(Object.assign(Object.assign(Object.assign({}, rawItems), recipes), meals), days);
+const users = __importStar(require("./users"));
+const schema = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, rawItems), recipes), meals), days), users);
 exports.default = schema;

@@ -9,9 +9,9 @@ import {
   useErrorHandler,
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
-import { meals, meals_recipes } from "../schema/meals";
+import { meals } from "../schema/meals";
 import { days } from "../schema/days";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -19,7 +19,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const body = req.body;
 
-    if (!body.mealNo || !body.proteins || !body.calories) {
+    if (!body.mealNo || !body.proteins || !body.calories || !body.userId) {
       throw new BadRequest("Bad Request!");
     }
     const today = new Date();
@@ -28,19 +28,22 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
     const insertedMeal = await db.insert(meals).values({ day: dayName, ...body });
 
-    body.recipes.length > 0 &&
-      body.recipes.map(async (ele: any) => {
-        await db.insert(meals_recipes).values({ mealId: insertedMeal.insertId, ...ele });
-      });
+    // body.recipes.length > 0 &&
+    //   body.recipes.map(async (ele: any) => {
+    //     await db.insert(meals_recipes).values({ mealId: insertedMeal.insertId, ...ele });
+    //   });
 
     const dayExists = await db.query.days.findFirst({
-      where: eq(days.day, dayName),
+      where: and(eq(days.userId, body.userId), eq(days.day, dayName)),
     });
 
     if (dayExists === undefined) {
-      await db
-        .insert(days)
-        .values({ day: dayName, totalCalories: body.calories, totalProteins: body.proteins });
+      await db.insert(days).values({
+        day: dayName,
+        totalCalories: body.calories,
+        totalProteins: body.proteins,
+        userId: body.userId,
+      });
     } else {
       await db
         .update(days)
@@ -48,7 +51,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
           totalCalories: sql`${days.totalCalories}+${body.calories}`,
           totalProteins: sql`${days.totalProteins}+${body.proteins}`,
         })
-        .where(eq(days.day, dayName));
+        .where(and(eq(days.userId, body.userId), eq(days.day, dayName)));
     }
 
     responseHandler(res, insertedMeal);
@@ -79,13 +82,13 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
       .set({ ...mealBody })
       .where(eq(meals.id, Number(params.id)));
 
-    recipes.length > 0 &&
-      recipes.map(async (ele: any) => {
-        await db
-          .update(meals_recipes)
-          .set({ qty: ele.qty })
-          .where(eq(meals_recipes.id, ele.mealRecipeId));
-      });
+    // recipes.length > 0 &&
+    //   recipes.map(async (ele: any) => {
+    //     await db
+    //       .update(meals_recipes)
+    //       .set({ qty: ele.qty })
+    //       .where(eq(meals_recipes.id, ele.mealRecipeId));
+    //   });
 
     await db
       .update(days)
@@ -93,7 +96,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
         totalCalories: sql`${days.totalCalories}-${fetchedMeal?.calories}+${mealBody.calories}`,
         totalProteins: sql`${days.totalProteins}-${fetchedMeal?.proteins}+${mealBody.proteins}`,
       })
-      .where(eq(days.day, fetchedMeal.day));
+      .where(and(eq(days.userId, fetchedMeal.userId), eq(days.day, fetchedMeal.day)));
 
     responseHandler(res, updatedMeal);
   } catch (err) {
@@ -111,13 +114,13 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
 
     const meal = await db.query.meals.findFirst({
       where: eq(meals.id, Number(params.id)),
-      with: {
-        mealsRecipies: {
-          with: {
-            recipes: true,
-          },
-        },
-      },
+      // with: {
+      //   mealsRecipies: {
+      //     with: {
+      //       recipes: true,
+      //     },
+      //   },
+      // },
     });
 
     responseHandler(res, meal);
@@ -126,20 +129,20 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const deleteMealRecipe = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const params = req.params;
-    if (!params.id) {
-      throw new BadRequest("Bad Request!");
-    }
+// export const deleteMealRecipe = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const params = req.params;
+//     if (!params.id) {
+//       throw new BadRequest("Bad Request!");
+//     }
 
-    const recipe = await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
+//     const recipe = await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
 
-    responseHandler(res, recipe);
-  } catch (err) {
-    next(err);
-  }
-};
+//     responseHandler(res, recipe);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 export const deleteMeal = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -150,7 +153,7 @@ export const deleteMeal = async (req: Request, res: Response, next: NextFunction
     }
 
     const meal = await db.delete(meals).where(eq(meals.id, Number(params.id)));
-    await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
+    // await db.delete(meals_recipes).where(eq(meals_recipes.id, Number(params.id)));
 
     responseHandler(res, meal);
   } catch (err) {

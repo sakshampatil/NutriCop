@@ -9,7 +9,7 @@ const drizzle_orm_1 = require("drizzle-orm");
 const create = async (req, res, next) => {
     try {
         const body = req.body;
-        if (!(body === null || body === void 0 ? void 0 : body.name) || !(body === null || body === void 0 ? void 0 : body.proteins) || !(body === null || body === void 0 ? void 0 : body.calories)) {
+        if (!(body === null || body === void 0 ? void 0 : body.name) || !(body === null || body === void 0 ? void 0 : body.proteins) || !(body === null || body === void 0 ? void 0 : body.calories) || !(body === null || body === void 0 ? void 0 : body.userId)) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
         const insertRawItem = await db_1.db.insert(raw_items_1.raw_items).values(body);
@@ -38,12 +38,13 @@ exports.update = update;
 const list = async (req, res, next) => {
     try {
         const query = req.query;
+        const params = req.params;
         // const items = await db
         //   .select()
         //   .from(raw_items)
         //   .where(like(raw_items.name, `%${query.search}%`));
         const items = await db_1.db.query.raw_items.findMany({
-            where: (0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`),
+            where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(raw_items_1.raw_items.userId, params.userId), (0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`)),
         });
         (0, responseHandler_1.responseHandler)(res, items);
     }

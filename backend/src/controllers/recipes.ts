@@ -10,22 +10,22 @@ import {
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
 import { eq, and, like } from "drizzle-orm";
-import { recipes, recipes_raw_items } from "../schema/recipes";
+import { recipes } from "../schema/recipes";
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body: any = req.body;
 
-    if (!body.name || !body.proteins || !body.calories) {
+    if (!body.name || !body.proteins || !body.calories || !body.userId) {
       throw new BadRequest("Bad Request!");
     }
 
     const insertedRecipe = await db.insert(recipes).values(body);
 
-    body.rawItems.length > 0 &&
-      body.rawItems.map(async (ele: any) => {
-        await db.insert(recipes_raw_items).values({ recipeId: insertedRecipe.insertId, ...ele });
-      });
+    // body.rawItems.length > 0 &&
+    //   body.rawItems.map(async (ele: any) => {
+    //     await db.insert(recipes_raw_items).values({ recipeId: insertedRecipe.insertId, ...ele });
+    //   });
 
     responseHandler(res, insertedRecipe);
   } catch (err) {
@@ -47,13 +47,13 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
       .set({ ...recipeBody })
       .where(eq(recipes.id, Number(params.id)));
 
-    rawItems.length > 0 &&
-      rawItems.map(async (ele: any) => {
-        let res = await db
-          .update(recipes_raw_items)
-          .set({ qty: ele.qty })
-          .where(eq(recipes_raw_items.id, ele.recipeRawItemId));
-      });
+    // rawItems.length > 0 &&
+    //   rawItems.map(async (ele: any) => {
+    //     let res = await db
+    //       .update(recipes_raw_items)
+    //       .set({ qty: ele.qty })
+    //       .where(eq(recipes_raw_items.id, ele.recipeRawItemId));
+    //   });
     responseHandler(res, updatedRecipe);
   } catch (err) {
     next(err);
@@ -63,16 +63,10 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = req.query;
+    const params: any = req.params;
 
     const recipesList = await db.query.recipes.findMany({
-      where: like(recipes.name, `%${query.search}%`),
-      with: {
-        recipesRawItems: {
-          with: {
-            rawItems: true,
-          },
-        },
-      },
+      where: and(eq(recipes.userId, params.userId), like(recipes.name, `%${query.search}%`)),
     });
 
     responseHandler(res, recipesList);
@@ -89,13 +83,6 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
     }
     const recipe = await db.query.recipes.findFirst({
       where: eq(recipes.id, Number(params.id)),
-      with: {
-        recipesRawItems: {
-          with: {
-            rawItems: true,
-          },
-        },
-      },
     });
 
     responseHandler(res, recipe);
@@ -104,22 +91,22 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const deleteRecipeRawItem = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const params = req.params;
-    if (!params.id) {
-      throw new BadRequest("Bad Request!");
-    }
+// export const deleteRecipeRawItem = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const params = req.params;
+//     if (!params.id) {
+//       throw new BadRequest("Bad Request!");
+//     }
 
-    const item = await db
-      .delete(recipes_raw_items)
-      .where(eq(recipes_raw_items.id, Number(params.id)));
+//     const item = await db
+//       .delete(recipes_raw_items)
+//       .where(eq(recipes_raw_items.id, Number(params.id)));
 
-    responseHandler(res, item);
-  } catch (err) {
-    next(err);
-  }
-};
+//     responseHandler(res, item);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 export const deleteRecipe = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -129,19 +116,19 @@ export const deleteRecipe = async (req: Request, res: Response, next: NextFuncti
     }
 
     const recipe = await db.delete(recipes).where(eq(recipes.id, Number(params.id)));
-    await db.delete(recipes_raw_items).where(eq(recipes_raw_items.recipeId, Number(params.id)));
+    // await db.delete(recipes_raw_items).where(eq(recipes_raw_items.recipeId, Number(params.id)));
     responseHandler(res, recipe);
   } catch (err) {
     next(err);
   }
 };
 
-export const listRawItems = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    let recipesList = {};
-    recipesList = await db.query.recipes_raw_items.findMany({});
-    responseHandler(res, recipesList);
-  } catch (err) {
-    next(err);
-  }
-};
+// export const listRawItems = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     let recipesList = {};
+//     recipesList = await db.query.recipes_raw_items.findMany({});
+//     responseHandler(res, recipesList);
+//   } catch (err) {
+//     next(err);
+//   }
+// };

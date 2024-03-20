@@ -10,14 +10,14 @@ import {
 } from "../service/errorHandler";
 import { raw_items } from "../schema/raw_items";
 import { responseHandler } from "../service/responseHandler";
-import { eq, like } from "drizzle-orm";
+import { eq, like, and } from "drizzle-orm";
 
 type NewRawItem = typeof raw_items.$inferInsert;
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body = req.body as NewRawItem;
-    if (!body?.name || !body?.proteins || !body?.calories) {
+    if (!body?.name || !body?.proteins || !body?.calories || !body?.userId) {
       throw new BadRequest("Bad Request!");
     }
 
@@ -45,14 +45,14 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query: any = req.query;
-
+    const params: any = req.params;
     // const items = await db
     //   .select()
     //   .from(raw_items)
     //   .where(like(raw_items.name, `%${query.search}%`));
 
     const items = await db.query.raw_items.findMany({
-      where: like(raw_items.name, `%${query.search}%`),
+      where: and(eq(raw_items.userId, params.userId), like(raw_items.name, `%${query.search}%`)),
     });
 
     responseHandler(res, items);

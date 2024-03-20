@@ -13,8 +13,11 @@ import { days } from "../schema/days";
 import { eq } from "drizzle-orm";
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
+  const params: any = req.params;
   try {
-    const daysList = await db.query.days.findMany();
+    const daysList = await db.query.days.findMany({
+      where: eq(days.userId, params.userId),
+    });
 
     responseHandler(res, daysList);
   } catch (err) {
@@ -31,17 +34,17 @@ export const findBasedOnId = async (req: Request, res: Response, next: NextFunct
 
     const day = await db.query.days.findFirst({
       where: eq(days.id, Number(params.id)),
-      with: {
-        meals: {
-          with: {
-            mealsRecipies: {
-              with: {
-                recipes: true,
-              },
-            },
-          },
-        },
-      },
+      // with: {
+      //   meals: {
+      //     with: {
+      //       mealsRecipies: {
+      //         with: {
+      //           recipes: true,
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
     });
     responseHandler(res, day);
   } catch (err) {
