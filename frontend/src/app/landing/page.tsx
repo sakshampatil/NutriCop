@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button";
 import { NextPage } from "next";
-import LoginButton from "./LoginButton";
+
 import Link from "next/link";
 
 const LandingPage: NextPage = () => {

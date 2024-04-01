@@ -14,13 +14,7 @@ import DashoardPage from "./dashboard/page";
 export default function Home() {
   return (
     <Fragment>
-      <NextUIProvider>
-        <SessionProvider>
-          <Navbar />
-          <LandingPage />
-          {/* <DashoardPage /> */}
-        </SessionProvider>
-      </NextUIProvider>
+      <LandingPage />
     </Fragment>
   );
 }
