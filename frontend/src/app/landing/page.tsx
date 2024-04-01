@@ -1,5 +1,7 @@
 import { Button } from "@nextui-org/button";
 import { NextPage } from "next";
+import LoginButton from "./LoginButton";
+import Link from "next/link";
 
 const LandingPage: NextPage = () => {
   return (
@@ -11,7 +13,7 @@ const LandingPage: NextPage = () => {
         Empowering Healthier Choices with Easy Calorie and Protein Tracking
       </h2>
       <Button className="bg-blue-600 rounded-lg px-3 py-2 text-lg mt-3 font-semibold">
-        Get Started
+        <Link href="/api/auth/signin">Get Started</Link>
       </Button>
     </div>
   );

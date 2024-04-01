@@ -1,7 +1,7 @@
-"use client";
 import { FC } from "react";
 
 import { Button } from "@nextui-org/button";
+import Link from "next/link";
 
 const Navbar: FC = () => {
   return (
@@ -9,7 +9,7 @@ const Navbar: FC = () => {
       <div className="text-white font-bold text-lg">NutriCop</div>
       <div className="">
         <Button radius="full" className="text-white bg-blue-600 px-3 py-2 rounded-lg font-normal">
-          Login
+          <Link href="/api/auth/signin">Login</Link>
         </Button>
       </div>
     </div>

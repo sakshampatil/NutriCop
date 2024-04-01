@@ -16,7 +16,7 @@ const routes = (app) => {
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: false }));
     app.use((0, cookie_parser_1.default)());
-    app.use("api/v1/auth", auth_1.default);
+    app.use("/api/v1/auth", auth_1.default);
     app.use("/api/v1/rawItems", rawItems_1.default);
     app.use("/api/v1/recipes", recipes_1.default);
     app.use("/api/v1/meals", meals_1.default);

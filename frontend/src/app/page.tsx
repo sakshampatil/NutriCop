@@ -9,6 +9,7 @@ import Navbar from "@/components/navbar/Navbar";
 import { NextUIProvider } from "@nextui-org/system";
 import { SessionProvider } from "next-auth/react";
 import LandingPage from "./landing/page";
+import DashoardPage from "./dashboard/page";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <SessionProvider>
           <Navbar />
           <LandingPage />
+          {/* <DashoardPage /> */}
         </SessionProvider>
       </NextUIProvider>
     </Fragment>
