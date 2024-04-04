@@ -4,6 +4,7 @@ import "./globals.css";
 import ProvidersWrapper from "@/components/general/ProvidersWrapper";
 import Navbar from "@/components/navbar/Navbar";
 import { getServerSession } from "next-auth";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 

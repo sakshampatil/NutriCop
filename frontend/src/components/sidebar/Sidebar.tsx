@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import cn from "classnames";
 
@@ -11,6 +11,8 @@ import { LuCalendarDays } from "react-icons/lu";
 
 import Image from "next/image";
 import logo from "../../../assets/calories tracker logo.png";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const sideContent = [
   {
@@ -31,7 +33,7 @@ const sideContent = [
   {
     label: "Ingredients",
     icon: <TbComponents />,
-    path: "/dashboard",
+    path: "/ingredients",
   },
   {
     label: "Days",
@@ -84,7 +86,11 @@ const Sidebar = ({ name, email, profile }: User) => {
             {/* content */}
             <div className="pl-2 ">
               {sideContent.map((e, index) => (
-                <div className="flex items-center gap-2 cursor-pointer mb-4">
+                <Link
+                  key={e.label}
+                  href={e.path}
+                  className="flex items-center gap-2 cursor-pointer mb-4"
+                >
                   <span
                     className={cn({
                       "text-2xl": !collapsed,
@@ -95,7 +101,7 @@ const Sidebar = ({ name, email, profile }: User) => {
                     {e.icon}
                   </span>
                   <span className="font-semibold text-lg">{!collapsed && e.label}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
