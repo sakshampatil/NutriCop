@@ -23,10 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ProvidersWrapper session={session}>
-          {/* {session !== null && <Sidebar />} */}
-          {children}
-        </ProvidersWrapper>
+        <ProvidersWrapper session={session}>{children}</ProvidersWrapper>
       </body>
     </html>
   );
