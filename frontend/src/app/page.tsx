@@ -6,14 +6,17 @@ import { Fragment } from "react";
 import Navbar from "@/components/navbar/Navbar";
 
 //Third Party packages
-import { NextUIProvider } from "@nextui-org/system";
-import { SessionProvider } from "next-auth/react";
+
 import LandingPage from "./landing/page";
-import DashoardPage from "./dashboard/page";
+import DashoardPage from "./(authenticated)/dashboard/page";
+import Sidebar from "@/components/sidebar/Sidebar";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session } = useSession();
   return (
     <Fragment>
+      {/* {session !== null && <Sidebar />} */}
       <LandingPage />
     </Fragment>
   );

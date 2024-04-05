@@ -11,7 +11,7 @@ import { LuCalendarDays } from "react-icons/lu";
 import { BiLogOut } from "react-icons/bi";
 
 import cn from "classnames";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import logo from "../../../assets/calories tracker logo.png";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
@@ -50,9 +50,10 @@ type User = {
   profile?: string | null;
 };
 
-const Sidebar = ({ name, email, profile }: User) => {
+const Sidebar = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const router = useRouter();
+  const { data: session } = useSession();
 
   const logout = () => {
     signOut({ redirect: false });
@@ -119,9 +120,9 @@ const Sidebar = ({ name, email, profile }: User) => {
             {collapsed ? (
               <div className="flex flex-col gap-5">
                 <div>
-                  {profile && (
+                  {session?.user?.image && (
                     <img
-                      src={profile}
+                      src={session?.user?.image}
                       alt="Profile pic"
                       width={42}
                       height={42}
@@ -137,9 +138,9 @@ const Sidebar = ({ name, email, profile }: User) => {
               <div className="flex flex-col items-center gap-5">
                 <div className="flex gap-2 items-center">
                   <div>
-                    {profile && (
+                    {session?.user?.image && (
                       <img
-                        src={profile}
+                        src={session?.user?.image}
                         alt="Profile pic"
                         width={42}
                         height={42}
@@ -148,8 +149,8 @@ const Sidebar = ({ name, email, profile }: User) => {
                     )}
                   </div>
                   <div className="flex flex-col">
-                    <span>{name}</span>
-                    <span className="text-xs text-blue-500">{email}</span>
+                    <span>{session?.user?.name}</span>
+                    <span className="text-xs text-blue-500">{session?.user?.email}</span>
                   </div>
                 </div>
                 <div>
