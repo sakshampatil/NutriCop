@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
-
-import cn from "classnames";
+import Link from "next/link";
+import Image from "next/image";
 
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 import { MdHome } from "react-icons/md";
@@ -8,11 +8,13 @@ import { TbComponents } from "react-icons/tb";
 import { GrNotes } from "react-icons/gr";
 import { GiMeal } from "react-icons/gi";
 import { LuCalendarDays } from "react-icons/lu";
+import { BiLogOut } from "react-icons/bi";
 
-import Image from "next/image";
+import cn from "classnames";
+import { signOut } from "next-auth/react";
 import logo from "../../../assets/calories tracker logo.png";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Button } from "@nextui-org/button";
+import { useRouter } from "next/navigation";
 
 const sideContent = [
   {
@@ -50,6 +52,12 @@ type User = {
 
 const Sidebar = ({ name, email, profile }: User) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const router = useRouter();
+
+  const logout = () => {
+    signOut({ redirect: false });
+    router.push("/");
+  };
 
   return (
     <Fragment>
@@ -61,7 +69,7 @@ const Sidebar = ({ name, email, profile }: User) => {
           "transition-[grid-template-columns] duration-300 ease-in-out": true,
         })}
       >
-        <div className=" bg-light-black text-white pt-3 pl-2 flex flex-col justify-between ">
+        <div className=" bg-light-black text-white pt-2  pl-2 flex flex-col justify-between ">
           {/* header */}
           <div>
             <div className="flex items-center gap-1">
@@ -109,19 +117,7 @@ const Sidebar = ({ name, email, profile }: User) => {
           <div className="mb-16">
             {/* user */}
             {collapsed ? (
-              <div>
-                {profile && (
-                  <img
-                    src={profile}
-                    alt="Profile pic"
-                    width={42}
-                    height={42}
-                    className="rounded-full"
-                  />
-                )}
-              </div>
-            ) : (
-              <div className="flex gap-2 items-center">
+              <div className="flex flex-col gap-5">
                 <div>
                   {profile && (
                     <img
@@ -133,9 +129,37 @@ const Sidebar = ({ name, email, profile }: User) => {
                     />
                   )}
                 </div>
-                <div className="flex flex-col">
-                  <span>{name}</span>
-                  <span className="text-xs text-blue-500">{email}</span>
+                <div className="text-3xl  flex  cursor-pointer  " onClick={() => logout()}>
+                  <BiLogOut />
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-5">
+                <div className="flex gap-2 items-center">
+                  <div>
+                    {profile && (
+                      <img
+                        src={profile}
+                        alt="Profile pic"
+                        width={42}
+                        height={42}
+                        className="rounded-full"
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <span>{name}</span>
+                    <span className="text-xs text-blue-500">{email}</span>
+                  </div>
+                </div>
+                <div>
+                  <Button
+                    radius="full"
+                    onClick={() => logout()}
+                    className="text-white bg-blue-600 px-3 py-2 rounded-lg font-normal"
+                  >
+                    Logout
+                  </Button>
                 </div>
               </div>
             )}

@@ -10,7 +10,7 @@ const ProvidersWrapper = ({ children }: any) => {
     <Fragment>
       <SessionProvider>
         <NextUIProvider>
-          <Provider store={store}>{children} </Provider>,
+          <Provider store={store}>{children}</Provider>
         </NextUIProvider>
       </SessionProvider>
     </Fragment>
