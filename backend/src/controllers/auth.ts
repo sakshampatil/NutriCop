@@ -3,7 +3,7 @@ import { db } from "../db";
 import { IUser } from "../types/types";
 import { BadRequest } from "../service/errorHandler";
 import { users } from "../schema/users";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { responseHandler } from "../service/responseHandler";
 import jwt from "jsonwebtoken";
@@ -67,16 +67,45 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
       throw new BadRequest("Bad Request!");
     }
 
-    const user = await db
-      .insert(users)
-      .values({ email: body.email, name: body.name })
-      .onConflictDoUpdate({
-        target: users.id,
-        set: { name: body.name },
-        where: eq(body.email, users.email),
-      });
+    const existsQuery = sql`
+  SELECT EXISTS(${db
+    .select({ n: sql`1` })
+    .from(users)
+    .where(eq(users.email, body.email))}) AS exists
+`;
+
+    const result = await db.execute<{ exists: boolean }>(existsQuery);
+    const recordExists = result[0].exists;
+    let user;
+    if (recordExists) {
+      //update name
+      user = await db
+        .update(users)
+        .set({ name: body.name })
+        .where(eq(users.email, body.email))
+        .returning({ id: users.id });
+    } else {
+      //insert user
+      user = await db
+        .insert(users)
+        .values({ email: body.email, name: body.name })
+        .returning({ id: users.id });
+    }
+
+    console.log("exists = ", recordExists);
+    // const user = await db
+    //   .insert(users)
+    //   .values({ email: body.email, name: body.name })
+    //   .onConflictDoUpdate({
+    //     target: users.id,
+    //     set: { name: body.name },
+    //     where: eq(body.email, users.email),
+    //   });
     console.log("uss = ", user);
-    const token = await jwt.sign({ email: body.email }, process.env.SECRET_KEY as string);
+    const token = await jwt.sign(
+      { email: body.email, userId: user[0].id },
+      process.env.SECRET_KEY as string
+    );
     res.send({
       token: token,
     });

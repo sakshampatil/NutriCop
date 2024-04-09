@@ -11,6 +11,7 @@ import {
 import { raw_items } from "../schema/raw_items";
 import { responseHandler } from "../service/responseHandler";
 import { eq, like, and } from "drizzle-orm";
+import { IGetUserAuthInfoRequest } from "../types/types";
 
 type NewRawItem = typeof raw_items.$inferInsert;
 
@@ -42,7 +43,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
     const query: any = req.query;
     const params: any = req.params;
@@ -52,7 +53,10 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     //   .where(like(raw_items.name, `%${query.search}%`));
 
     const items = await db.query.raw_items.findMany({
-      where: and(eq(raw_items.userId, params.userId), like(raw_items.name, `%${query.search}%`)),
+      where: and(
+        eq(raw_items.userId, Number(req?.user)),
+        like(raw_items.name, `%${query.search}%`)
+      ),
     });
 
     responseHandler(res, items);

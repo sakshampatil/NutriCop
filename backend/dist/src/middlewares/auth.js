@@ -22,7 +22,7 @@ const verifyToken = (req, res, next) => {
         //if can verify the token, set req.user and pass to next middleware
         const decoded = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
         console.log("dec = ", decoded);
-        req.user = decoded === null || decoded === void 0 ? void 0 : decoded.email;
+        req.user = decoded === null || decoded === void 0 ? void 0 : decoded.userId;
         next();
     }
     catch (err) {

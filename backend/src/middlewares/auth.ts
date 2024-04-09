@@ -19,7 +19,7 @@ export const verifyToken = (req: IGetUserAuthInfoRequest, res: Response, next: N
     //if can verify the token, set req.user and pass to next middleware
     const decoded = jwt.verify(token, process.env.SECRET_KEY!);
     console.log("dec = ", decoded);
-    req.user = (decoded as JwtPayload)?.email as string;
+    req.user = (decoded as JwtPayload)?.userId as string;
     next();
   } catch (err) {
     next(err);

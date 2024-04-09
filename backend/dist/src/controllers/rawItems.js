@@ -44,7 +44,7 @@ const list = async (req, res, next) => {
         //   .from(raw_items)
         //   .where(like(raw_items.name, `%${query.search}%`));
         const items = await db_1.db.query.raw_items.findMany({
-            where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(raw_items_1.raw_items.userId, params.userId), (0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`)),
+            where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(raw_items_1.raw_items.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(raw_items_1.raw_items.name, `%${query.search}%`)),
         });
         (0, responseHandler_1.responseHandler)(res, items);
     }

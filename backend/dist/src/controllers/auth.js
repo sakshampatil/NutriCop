@@ -57,16 +57,41 @@ const signIn = async (req, res, next) => {
         if (!body.email) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
-        const user = await db_1.db
-            .insert(users_1.users)
-            .values({ email: body.email, name: body.name })
-            .onConflictDoUpdate({
-            target: users_1.users.id,
-            set: { name: body.name },
-            where: (0, drizzle_orm_1.eq)(body.email, users_1.users.email),
-        });
+        const existsQuery = (0, drizzle_orm_1.sql) `
+  SELECT EXISTS(${db_1.db
+            .select({ n: (0, drizzle_orm_1.sql) `1` })
+            .from(users_1.users)
+            .where((0, drizzle_orm_1.eq)(users_1.users.email, body.email))}) AS exists
+`;
+        const result = await db_1.db.execute(existsQuery);
+        const recordExists = result[0].exists;
+        let user;
+        if (recordExists) {
+            //update name
+            user = await db_1.db
+                .update(users_1.users)
+                .set({ name: body.name })
+                .where((0, drizzle_orm_1.eq)(users_1.users.email, body.email))
+                .returning({ id: users_1.users.id });
+        }
+        else {
+            //insert user
+            user = await db_1.db
+                .insert(users_1.users)
+                .values({ email: body.email, name: body.name })
+                .returning({ id: users_1.users.id });
+        }
+        console.log("exists = ", recordExists);
+        // const user = await db
+        //   .insert(users)
+        //   .values({ email: body.email, name: body.name })
+        //   .onConflictDoUpdate({
+        //     target: users.id,
+        //     set: { name: body.name },
+        //     where: eq(body.email, users.email),
+        //   });
         console.log("uss = ", user);
-        const token = await jsonwebtoken_1.default.sign({ email: body.email }, process.env.SECRET_KEY);
+        const token = await jsonwebtoken_1.default.sign({ email: body.email, userId: user[0].id }, process.env.SECRET_KEY);
         res.send({
             token: token,
         });
