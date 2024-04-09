@@ -1,11 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signIn = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const users_1 = require("../schema/users");
 const drizzle_orm_1 = require("drizzle-orm");
-const responseHandler_1 = require("../service/responseHandler");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // export const signup = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
 //     const body = req.body as UserI | null;
@@ -62,7 +65,12 @@ const signIn = async (req, res, next) => {
             set: { name: body.name },
             where: (0, drizzle_orm_1.eq)(body.email, users_1.users.email),
         });
-        (0, responseHandler_1.responseHandler)(res, user);
+        console.log("uss = ", user);
+        const token = await jsonwebtoken_1.default.sign({ email: body.email }, process.env.SECRET_KEY);
+        res.send({
+            token: token,
+        });
+        // responseHandler(res, user);
     }
     catch (err) {
         next(err);

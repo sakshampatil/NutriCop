@@ -1,11 +1,12 @@
 import { NextFunction, Response, Request } from "express";
 import { db } from "../db";
-import { UserI } from "../types/types";
+import { IUser } from "../types/types";
 import { BadRequest } from "../service/errorHandler";
 import { users } from "../schema/users";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { responseHandler } from "../service/responseHandler";
+import jwt from "jsonwebtoken";
 
 // export const signup = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
@@ -74,8 +75,13 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
         set: { name: body.name },
         where: eq(body.email, users.email),
       });
+    console.log("uss = ", user);
+    const token = await jwt.sign({ email: body.email }, process.env.SECRET_KEY as string);
+    res.send({
+      token: token,
+    });
 
-    responseHandler(res, user);
+    // responseHandler(res, user);
   } catch (err) {
     next(err);
   }

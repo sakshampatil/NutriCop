@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const meals_1 = require("../controllers/meals");
+const auth_1 = require("../middlewares/auth");
 const router = (0, express_1.Router)();
-router.route("/create").post(meals_1.create);
-router.route("/update/:id").put(meals_1.update);
-router.route("/list/:id").get(meals_1.findBasedOnId);
+router.route("/create").post(auth_1.verifyToken, meals_1.create);
+router.route("/update/:id").put(auth_1.verifyToken, meals_1.update);
+router.route("/list/:id").get(auth_1.verifyToken, meals_1.findBasedOnId);
 // router.route("/deleteMealRecipe/:id").delete(deleteMealRecipe);
-router.route("/deleteMeal/:id").delete(meals_1.deleteMeal);
+router.route("/deleteMeal/:id").delete(auth_1.verifyToken, meals_1.deleteMeal);
 exports.default = router;

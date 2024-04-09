@@ -8,6 +8,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
+
   const [collapsed, setCollapsed] = useState<boolean>(false);
   return (
     <Fragment>
@@ -22,7 +23,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
         {/* sidebar */}
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
         {/* content */}
-        <div className=""> {children}</div>
+        <div className="ml-6 mt-6"> {children}</div>
       </div>
     </Fragment>
   );
