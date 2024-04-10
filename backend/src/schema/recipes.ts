@@ -9,7 +9,7 @@ export const recipes = pgTable(
     id: serial("id").primaryKey(),
     userId: integer("userd_id").notNull(),
     name: varchar("name", { length: 50 }).notNull(),
-    raw_items: json("raw_items").$type<{ rawItemId: number; qty: number }[]>(),
+    ingredients: json("ingredients").$type<{ ingredientsId: number; qty: number }[]>(),
     proteins: integer("proteins").notNull(),
     calories: integer("calories").notNull(),
   }

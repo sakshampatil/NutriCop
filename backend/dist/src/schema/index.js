@@ -23,10 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const rawItems = __importStar(require("./raw_items"));
+const ingredients = __importStar(require("./ingredients"));
 const recipes = __importStar(require("./recipes"));
 const meals = __importStar(require("./meals"));
 const days = __importStar(require("./days"));
 const users = __importStar(require("./users"));
-const schema = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, rawItems), recipes), meals), days), users);
+const schema = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, ingredients), recipes), meals), days), users);
 exports.default = schema;

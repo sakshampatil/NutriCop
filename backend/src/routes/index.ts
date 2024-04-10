@@ -3,7 +3,7 @@ import { useErrorHandler } from "../service/errorHandler";
 import cookieParser from "cookie-parser";
 
 import auth from "./auth";
-import rawItems from "./rawItems";
+import ingredients from "./ingredients";
 import recipes from "./recipes";
 import meals from "./meals";
 import days from "./days";
@@ -14,7 +14,7 @@ export const routes = (app: Application) => {
   app.use(cookieParser());
 
   app.use("/api/v1/auth", auth);
-  app.use("/api/v1/rawItems", rawItems);
+  app.use("/api/v1/ingredients", ingredients);
   app.use("/api/v1/recipes", recipes);
   app.use("/api/v1/meals", meals);
   app.use("/api/v1/days", days);

@@ -2,8 +2,8 @@
 import { pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
 // import { recipes_raw_items } from "./recipes";
 
-export const raw_items = pgTable(
-  "raw_items",
+export const ingredients = pgTable(
+  "ingredients",
   {
     id: serial("id").primaryKey(),
     userId: integer("userd_id").notNull(),

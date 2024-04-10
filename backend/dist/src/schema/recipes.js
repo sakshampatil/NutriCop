@@ -9,7 +9,7 @@ exports.recipes = (0, pg_core_1.pgTable)("recipes", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
     userId: (0, pg_core_1.integer)("userd_id").notNull(),
     name: (0, pg_core_1.varchar)("name", { length: 50 }).notNull(),
-    raw_items: (0, pg_core_1.json)("raw_items").$type(),
+    ingredients: (0, pg_core_1.json)("ingredients").$type(),
     proteins: (0, pg_core_1.integer)("proteins").notNull(),
     calories: (0, pg_core_1.integer)("calories").notNull(),
 }
