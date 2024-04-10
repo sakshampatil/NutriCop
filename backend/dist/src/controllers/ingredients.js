@@ -9,7 +9,9 @@ const drizzle_orm_1 = require("drizzle-orm");
 const create = async (req, res, next) => {
     try {
         const body = req.body;
-        if (!(body === null || body === void 0 ? void 0 : body.name) || !(body === null || body === void 0 ? void 0 : body.proteins) || !(body === null || body === void 0 ? void 0 : body.calories) || !(body === null || body === void 0 ? void 0 : body.userId)) {
+        body.userId = Number(req.user);
+        console.log("ING = ", body);
+        if (!(body === null || body === void 0 ? void 0 : body.name) || !(body === null || body === void 0 ? void 0 : body.proteins) || !(body === null || body === void 0 ? void 0 : body.calories)) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
         const insertRawItem = await db_1.db.insert(ingredients_1.ingredients).values(body);

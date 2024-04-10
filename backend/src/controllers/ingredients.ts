@@ -13,12 +13,13 @@ import { responseHandler } from "../service/responseHandler";
 import { eq, like, and } from "drizzle-orm";
 import { IGetUserAuthInfoRequest } from "../types/types";
 
-type NewIngredient = typeof ingredients.$inferInsert;
-
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const create = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
-    const body = req.body as NewIngredient;
-    if (!body?.name || !body?.proteins || !body?.calories || !body?.userId) {
+    const body = req.body;
+    body.userId = Number(req.user);
+    console.log("ING = ", body);
+
+    if (!body?.name || !body?.proteins || !body?.calories) {
       throw new BadRequest("Bad Request!");
     }
 

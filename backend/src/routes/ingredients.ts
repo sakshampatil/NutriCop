@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, deleteItem, list, update } from "../controllers/rawItems";
+import { create, deleteItem, list, update } from "../controllers/ingredients";
 import { verifyToken } from "../middlewares/auth";
 
 const router = Router();

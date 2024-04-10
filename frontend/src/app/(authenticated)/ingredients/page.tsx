@@ -15,7 +15,7 @@ export const animals = [
   { label: "Giraffe", value: "giraffe", description: "The tallest land animal" },
 ];
 
-const Ingredients = () => {
+const IngredientsPage = () => {
   const session = useSession();
   const { data, error, isLoading, refetch } = useGetIngredientsListQuery("");
 
@@ -50,4 +50,4 @@ const Ingredients = () => {
   );
 };
 
-export default Ingredients;
+export default IngredientsPage;

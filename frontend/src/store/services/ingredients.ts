@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
+import { IIngredient } from "@/types/ingredientTypes";
 
 export const ingredientsApi = createApi({
   reducerPath: "ingredientsApi",
@@ -17,9 +18,16 @@ export const ingredientsApi = createApi({
   }),
   endpoints: (builder) => ({
     getIngredientsList: builder.query<any, string>({
-      query: (name) => `rawItems/list?search=${name}`,
+      query: (name) => `ingredients/list?search=${name}`,
+    }),
+    createIngredient: builder.mutation<any, IIngredient>({
+      query: (body) => ({
+        url: `ingredients/create`,
+        method: "POST",
+        body: body,
+      }),
     }),
   }),
 });
 
-export const { useGetIngredientsListQuery } = ingredientsApi;
+export const { useGetIngredientsListQuery, useCreateIngredientMutation } = ingredientsApi;

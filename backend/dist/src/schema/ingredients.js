@@ -9,7 +9,7 @@ exports.ingredients = (0, pg_core_1.pgTable)("ingredients", {
     userId: (0, pg_core_1.integer)("userd_id").notNull(),
     name: (0, pg_core_1.varchar)("name", { length: 50 }).notNull(),
     unit: (0, pg_core_1.varchar)("unit", { length: 50 }),
-    perQty: (0, pg_core_1.integer)("per_qty"),
+    perUnit: (0, pg_core_1.integer)("per_unit"),
     proteins: (0, pg_core_1.integer)("proteins").notNull(),
     calories: (0, pg_core_1.integer)("calories").notNull(),
 }

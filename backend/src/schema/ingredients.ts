@@ -9,7 +9,7 @@ export const ingredients = pgTable(
     userId: integer("userd_id").notNull(),
     name: varchar("name", { length: 50 }).notNull(),
     unit: varchar("unit", { length: 50 }),
-    perQty: integer("per_qty"),
+    perUnit: integer("per_unit"),
     proteins: integer("proteins").notNull(),
     calories: integer("calories").notNull(),
   }
