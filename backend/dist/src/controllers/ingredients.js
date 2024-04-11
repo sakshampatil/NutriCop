@@ -39,16 +39,34 @@ const update = async (req, res, next) => {
 exports.update = update;
 const list = async (req, res, next) => {
     try {
-        const query = req.query;
-        const params = req.params;
-        // const items = await db
-        //   .select()
-        //   .from(raw_items)
-        //   .where(like(raw_items.name, `%${query.search}%`));
-        const items = await db_1.db.query.ingredients.findMany({
-            where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(ingredients_1.ingredients.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(ingredients_1.ingredients.name, `%${query.search}%`)),
-        });
-        (0, responseHandler_1.responseHandler)(res, items);
+        const search = req.query.search;
+        const page = parseInt(req.query.page);
+        const pageSize = parseInt(req.query.pageSize);
+        const sortBy = req.query.sortBy;
+        const descending = req.query.desc === "true" ? true : false;
+        const allowedSortByFields = ["name", "calories", "proteins"];
+        const isAllowedSortBy = allowedSortByFields.includes(sortBy);
+        const orderByClause = isAllowedSortBy ? ingredients_1.ingredients[sortBy] : "name";
+        const startIdx = (page - 1) * pageSize;
+        const endIdx = page * pageSize;
+        let items = [];
+        if (descending) {
+            items = await db_1.db
+                .select()
+                .from(ingredients_1.ingredients)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(ingredients_1.ingredients.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(ingredients_1.ingredients.name, `%${search}%`)))
+                .orderBy((0, drizzle_orm_1.desc)(orderByClause));
+        }
+        else {
+            items = await db_1.db
+                .select()
+                .from(ingredients_1.ingredients)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(ingredients_1.ingredients.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(ingredients_1.ingredients.name, `%${search}%`)))
+                .orderBy((0, drizzle_orm_1.asc)(orderByClause));
+        }
+        const paginatedItems = items.slice(startIdx, endIdx);
+        console.log("ITEMS =", paginatedItems);
+        (0, responseHandler_1.responseHandler)(res, paginatedItems);
     }
     catch (err) {
         next(err);

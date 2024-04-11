@@ -10,7 +10,7 @@ import {
 } from "../service/errorHandler";
 import { ingredients } from "../schema/ingredients";
 import { responseHandler } from "../service/responseHandler";
-import { eq, like, and } from "drizzle-orm";
+import { eq, like, and, asc, desc } from "drizzle-orm";
 import { IGetUserAuthInfoRequest } from "../types/types";
 
 export const create = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
@@ -46,21 +46,43 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 
 export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
-    const query: any = req.query;
-    const params: any = req.params;
-    // const items = await db
-    //   .select()
-    //   .from(raw_items)
-    //   .where(like(raw_items.name, `%${query.search}%`));
+    const search: string = req.query.search as string;
+    const page: number = parseInt(req.query.page as string);
+    const pageSize: number = parseInt(req.query.pageSize as string);
+    const sortBy: string = req.query.sortBy as string;
+    const descending: boolean = req.query.desc === "true" ? true : false;
 
-    const items = await db.query.ingredients.findMany({
-      where: and(
-        eq(ingredients.userId, Number(req?.user)),
-        like(ingredients.name, `%${query.search}%`)
-      ),
-    });
+    const allowedSortByFields = ["name", "calories", "proteins"];
 
-    responseHandler(res, items);
+    const isAllowedSortBy = allowedSortByFields.includes(sortBy);
+    const orderByClause = isAllowedSortBy ? (ingredients as any)[sortBy] : "name";
+
+    const startIdx = (page - 1) * pageSize;
+    const endIdx = page * pageSize;
+
+    let items = [];
+
+    if (descending) {
+      items = await db
+        .select()
+        .from(ingredients)
+        .where(
+          and(eq(ingredients.userId, Number(req?.user)), like(ingredients.name, `%${search}%`))
+        )
+        .orderBy(desc(orderByClause));
+    } else {
+      items = await db
+        .select()
+        .from(ingredients)
+        .where(
+          and(eq(ingredients.userId, Number(req?.user)), like(ingredients.name, `%${search}%`))
+        )
+        .orderBy(asc(orderByClause));
+    }
+
+    const paginatedItems = items.slice(startIdx, endIdx);
+    console.log("ITEMS =", paginatedItems);
+    responseHandler(res, paginatedItems);
   } catch (err) {
     next(err);
   }

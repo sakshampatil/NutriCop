@@ -18,7 +18,7 @@ export const ingredientsApi = createApi({
   }),
   endpoints: (builder) => ({
     getIngredientsList: builder.query<any, string>({
-      query: (name) => `ingredients/list?search=${name}`,
+      query: (name) => `ingredients/list?search=${name}&page=1&pageSize=2`,
     }),
     createIngredient: builder.mutation<any, IIngredient>({
       query: (body) => ({

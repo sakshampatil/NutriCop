@@ -21,7 +21,7 @@ const headers = [
 
 const IngredientsPage = () => {
   const session = useSession();
-  const { data, error, isLoading, refetch } = useGetIngredientsListQuery("");
+  const { data: item, error, isLoading, refetch } = useGetIngredientsListQuery("");
 
   const [searchVal, setSearchVal] = useState<string>();
   const [page, setPage] = useState<number>(1);
@@ -33,7 +33,7 @@ const IngredientsPage = () => {
     }
   }, [session.data?.user.accessToken]);
   {
-    console.log("dat = ", data);
+    console.log("dat = ", item);
   }
 
   const onSearchChange = useCallback((val: string) => {
@@ -96,7 +96,7 @@ const IngredientsPage = () => {
       </div>
       {/* table  */}
       <div>
-        <Table
+        {/* <Table
           aria-label="Example table with custom cells, pagination and sorting"
           isHeaderSticky
           // bottomContent={bottomContent}
@@ -124,7 +124,7 @@ const IngredientsPage = () => {
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </Table> */}
       </div>
     </Fragment>
   );
