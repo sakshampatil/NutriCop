@@ -80,9 +80,14 @@ export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: Ne
         .orderBy(asc(orderByClause));
     }
 
+    const totalPages = Math.ceil(items.length / pageSize);
     const paginatedItems = items.slice(startIdx, endIdx);
     console.log("ITEMS =", paginatedItems);
-    responseHandler(res, paginatedItems);
+    const data = {
+      ingredients: paginatedItems,
+      totalPages: totalPages,
+    };
+    responseHandler(res, data);
   } catch (err) {
     next(err);
   }

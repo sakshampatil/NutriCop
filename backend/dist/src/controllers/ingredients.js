@@ -64,9 +64,14 @@ const list = async (req, res, next) => {
                 .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(ingredients_1.ingredients.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(ingredients_1.ingredients.name, `%${search}%`)))
                 .orderBy((0, drizzle_orm_1.asc)(orderByClause));
         }
+        const totalPages = Math.ceil(items.length / pageSize);
         const paginatedItems = items.slice(startIdx, endIdx);
         console.log("ITEMS =", paginatedItems);
-        (0, responseHandler_1.responseHandler)(res, paginatedItems);
+        const data = {
+            ingredients: paginatedItems,
+            totalPages: totalPages,
+        };
+        (0, responseHandler_1.responseHandler)(res, data);
     }
     catch (err) {
         next(err);
