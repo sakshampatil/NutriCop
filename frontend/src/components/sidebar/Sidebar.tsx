@@ -30,7 +30,7 @@ const sideContent = [
   {
     label: "Recipes",
     icon: <GrNotes />,
-    path: "/dashboard",
+    path: "/recipes",
   },
   {
     label: "Ingredients",

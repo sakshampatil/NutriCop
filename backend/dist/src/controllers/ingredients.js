@@ -40,8 +40,12 @@ exports.update = update;
 const list = async (req, res, next) => {
     try {
         const search = req.query.search;
-        const page = parseInt(req.query.page);
-        const pageSize = parseInt(req.query.pageSize);
+        const page = parseInt(req.query.page)
+            ? parseInt(req.query.page)
+            : 1;
+        const pageSize = parseInt(req.query.pageSize)
+            ? parseInt(req.query.pageSize)
+            : 10000;
         const sortBy = req.query.sortBy;
         const descending = req.query.desc === "true" ? true : false;
         const allowedSortByFields = ["name", "calories", "proteins"];

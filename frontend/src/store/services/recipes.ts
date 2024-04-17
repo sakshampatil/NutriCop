@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
-import { IIngredient } from "@/types/ingredientTypes";
+import { IRecipe } from "@/types/recipeTypes";
 
-export const ingredientsApi = createApi({
-  reducerPath: "ingredientsApi",
+export const recipesApi = createApi({
+  reducerPath: "recipesApi",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      // const token = (getState() as RootState).auth.token;
+      // const token = (getState() as RootState).auth.token;a
       // const token = (getState() as RootState).auth?.user?.accessToken;
       const token = localStorage.getItem("token") || "";
 
@@ -17,19 +17,15 @@ export const ingredientsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getIngredientsPaginatedList: builder.query<any, any>({
+    getRecipesList: builder.query<any, any>({
       query: ({ name, page, pageSize, sortBy, desc }) => {
         let [head]: any = sortBy;
-
-        return `ingredients/list?search=${name}&page=${page}&pageSize=${pageSize}&sortBy=${head}&desc=${desc}`;
+        return `recipes/list?search=${name}&page=${page}&pageSize=${pageSize}&sortBy=${head}&desc=${desc}`;
       },
     }),
-    getIngredientsList: builder.query<any, any>({
-      query: ({ name }) => `ingredients/list?search=${name}`,
-    }),
-    createIngredient: builder.mutation<any, IIngredient>({
+    createRecipe: builder.mutation<any, IRecipe>({
       query: (body) => ({
-        url: `ingredients/create`,
+        url: `recipes/create`,
         method: "POST",
         body: body,
       }),
@@ -43,9 +39,5 @@ export const ingredientsApi = createApi({
   }),
 });
 
-export const {
-  useGetIngredientsPaginatedListQuery,
-  useGetIngredientsListQuery,
-  useCreateIngredientMutation,
-  useDeleteIngredientMutation,
-} = ingredientsApi;
+export const { useGetRecipesListQuery, useCreateRecipeMutation, useDeleteIngredientMutation } =
+  recipesApi;

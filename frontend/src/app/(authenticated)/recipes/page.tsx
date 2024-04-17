@@ -2,7 +2,7 @@
 import React, { Fragment, Key, useCallback, useEffect, useState, useMemo } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import {
-  useGetIngredientsPaginatedListQuery,
+  useGetIngredientsListQuery,
   useDeleteIngredientMutation,
 } from "@/store/services/ingredients";
 import { useSession } from "next-auth/react";
@@ -50,7 +50,7 @@ const IngredientsPage = () => {
   const [sortBy, setSortBy] = useState(new Set(["name"]));
   const [desc, setDesc] = useState<boolean>(false);
 
-  const { data, error, isLoading } = useGetIngredientsPaginatedListQuery(
+  const { data, error, isLoading } = useGetIngredientsListQuery(
     { name: searchVal, page: page, pageSize: 2, sortBy: sortBy, desc: desc },
     { refetchOnMountOrArgChange: true }
   );
@@ -63,10 +63,6 @@ const IngredientsPage = () => {
       // refetch();
     }
   }, [session.data?.user.accessToken]);
-
-  useEffect(() => {
-    console.log("SORT By = ", sortBy);
-  }, [sortBy]);
 
   const onSearchChange = useCallback((val: string) => {
     if (val) {
@@ -85,7 +81,7 @@ const IngredientsPage = () => {
   return (
     <Fragment>
       {/* heading */}
-      <h1 className="text-5xl font-semibold">Ingredients</h1>
+      <h1 className="text-5xl font-semibold">Recipes</h1>
       <div className="flex justify-center items-center gap-16 mt-5">
         {/* search */}
         <Input
@@ -130,11 +126,8 @@ const IngredientsPage = () => {
         </div>
         {/* add new  */}
         <Button color="primary">
-          <Link
-            className="flex items-center justify-center gap-1"
-            href={"/ingredients/addIngredients"}
-          >
-            <span>Add Ingredient</span>
+          <Link className="flex items-center justify-center gap-1" href={"/recipes/addRecipes"}>
+            <span>Add Recipe</span>
             <span>
               <FaPlus />
             </span>
@@ -144,7 +137,7 @@ const IngredientsPage = () => {
       {/* table  */}
       <div className="mt-6">
         <Table
-          aria-label="Example table with dynamic content"
+          aria-label="Reccipes Table"
           classNames={{ table: "bg-black", wrapper: "bg-black" }}
           bottomContent={
             <div className="flex justify-center">

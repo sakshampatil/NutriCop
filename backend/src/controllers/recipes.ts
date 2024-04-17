@@ -11,11 +11,12 @@ import {
 import { responseHandler } from "../service/responseHandler";
 import { eq, and, like } from "drizzle-orm";
 import { recipes } from "../schema/recipes";
+import { IGetUserAuthInfoRequest } from "../types/types";
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const create = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
     const body: any = req.body;
-
+    body.userId = Number(req.user);
     if (!body.name || !body.proteins || !body.calories || !body.userId) {
       throw new BadRequest("Bad Request!");
     }

@@ -47,8 +47,12 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
     const search: string = req.query.search as string;
-    const page: number = parseInt(req.query.page as string);
-    const pageSize: number = parseInt(req.query.pageSize as string);
+    const page: number = parseInt(req.query.page as string)
+      ? parseInt(req.query.page as string)
+      : 1;
+    const pageSize: number = parseInt(req.query.pageSize as string)
+      ? parseInt(req.query.pageSize as string)
+      : 10000;
     const sortBy: string = req.query.sortBy as string;
     const descending: boolean = req.query.desc === "true" ? true : false;
 

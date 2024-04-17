@@ -20,6 +20,7 @@ const recipes_1 = require("../schema/recipes");
 const create = async (req, res, next) => {
     try {
         const body = req.body;
+        body.userId = Number(req.user);
         if (!body.name || !body.proteins || !body.calories || !body.userId) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
