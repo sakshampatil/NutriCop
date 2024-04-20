@@ -6,8 +6,8 @@ const router = Router();
 
 router.route("/create").post(verifyToken, create);
 router.route("/update/:id").put(verifyToken, update);
-router.route("/list/:userId").get(verifyToken, list);
+router.route("/list").get(verifyToken, list);
 router.route("/list/:id").get(verifyToken, findBasedOnId);
-router.route("/deleteRecipe/:id").delete(verifyToken, deleteRecipe);
+router.route("/delete/:id").delete(verifyToken, deleteRecipe);
 
 export default router;

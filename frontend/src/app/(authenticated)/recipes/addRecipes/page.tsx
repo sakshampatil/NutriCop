@@ -160,16 +160,10 @@ const AddRecipesPage = () => {
       });
       return;
     }
-    let modifiedArray = ingredientsArray.map((ele) => {
-      return {
-        id: ele.id,
-        qty: ele.qty,
-      };
-    });
 
     let body = {
       name: name,
-      ingredients: modifiedArray,
+      ingredients: ingredientsArray,
       proteins: totalProteins,
       calories: totalCalories,
     };

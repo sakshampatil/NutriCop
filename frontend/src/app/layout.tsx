@@ -23,7 +23,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ProvidersWrapper session={session}>{children}</ProvidersWrapper>
+        <ProvidersWrapper session={session}>
+          <main className="dark">{children}</main>
+        </ProvidersWrapper>
       </body>
     </html>
   );

@@ -1,10 +1,7 @@
 "use client";
 import React, { Fragment, Key, useCallback, useEffect, useState, useMemo } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import {
-  useGetIngredientsListQuery,
-  useDeleteIngredientMutation,
-} from "@/store/services/ingredients";
+import { useGetRecipesPaginatedListQuery, useDeleteRecipeMutation } from "@/store/services/recipes";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -13,27 +10,37 @@ import { IoSearchOutline } from "react-icons/io5";
 import { GrAscend, GrDescend } from "react-icons/gr";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/modal";
 import { Pagination, PaginationItem, PaginationCursor } from "@nextui-org/pagination";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  getKeyValue,
-} from "@nextui-org/table";
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/table";
+import { json } from "node:stream/consumers";
 
 const headers = [
   { name: "Name", uid: "name" },
   { name: "Proteins", uid: "proteins" },
   { name: "Calories", uid: "calories" },
-  { name: "Unit", uid: "unit" },
-  { name: "Per-Unit", uid: "perUnit" },
   { name: "Action", uid: "action" },
+];
+
+const ingredientsHeaders = [
+  {
+    key: "name",
+    label: "NAME",
+  },
+  {
+    key: "qty",
+    label: "Qty",
+  },
 ];
 
 const sortByArr = [
@@ -49,13 +56,16 @@ const IngredientsPage = () => {
   const [page, setPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState(new Set(["name"]));
   const [desc, setDesc] = useState<boolean>(false);
+  const [modalRow, setModalRow] = useState<any | null>(null);
 
-  const { data, error, isLoading } = useGetIngredientsListQuery(
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const { data, error, isLoading, refetch } = useGetRecipesPaginatedListQuery(
     { name: searchVal, page: page, pageSize: 2, sortBy: sortBy, desc: desc },
     { refetchOnMountOrArgChange: true }
   );
 
-  const [deleteItem, { isSuccess }] = useDeleteIngredientMutation();
+  const [deleteItem, { isSuccess: isDeleteSuccess }] = useDeleteRecipeMutation();
 
   useEffect(() => {
     if (session.data?.user.accessToken) {
@@ -63,6 +73,16 @@ const IngredientsPage = () => {
       // refetch();
     }
   }, [session.data?.user.accessToken]);
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      refetch();
+    }
+  }, [isDeleteSuccess]);
+
+  useEffect(() => {
+    console.log("ROW =", modalRow);
+  }, [modalRow]);
 
   const onSearchChange = useCallback((val: string) => {
     if (val) {
@@ -77,6 +97,11 @@ const IngredientsPage = () => {
     setSearchVal("");
     setPage(1);
   }, []);
+
+  const onModalOpen = (row: any) => {
+    setModalRow(row);
+    onOpen();
+  };
 
   return (
     <Fragment>
@@ -168,13 +193,11 @@ const IngredientsPage = () => {
             ))}
           </TableHeader>
           <TableBody emptyContent={"No rows to display."}>
-            {data?.data?.ingredients.map((row: any) => (
-              <TableRow key={row.id}>
+            {data?.data?.recipes.map((row: any) => (
+              <TableRow className="cursor-pointer" onClick={() => onModalOpen(row)} key={row.id}>
                 <TableCell className="text-center">{row.name}</TableCell>
                 <TableCell className="text-center">{row.proteins}</TableCell>
                 <TableCell className="text-center">{row.calories}</TableCell>
-                <TableCell className="text-center">{row.unit ? row.unit : "-"}</TableCell>
-                <TableCell className="text-center">{row.perUnit ? row.perUnit : "-"}</TableCell>
                 <TableCell className="flex justify-center text-red-500">
                   <span onClick={() => deleteItem(row.id)} className="cursor-pointer">
                     <RiDeleteBin5Line />
@@ -185,6 +208,54 @@ const IngredientsPage = () => {
           </TableBody>
         </Table>
       </div>
+      {modalRow !== null && (
+        <Modal className="dark" isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className=" flex flex-col gap-1">{modalRow?.name}</ModalHeader>
+                <ModalBody>
+                  <Table
+                    aria-label="Add Recipes Ingredients Table"
+                    classNames={{ table: "bg-black", wrapper: "bg-black" }}
+                  >
+                    <TableHeader columns={ingredientsHeaders}>
+                      {(column) => (
+                        <TableColumn className="text-center" key={column.key}>
+                          {column.label}
+                        </TableColumn>
+                      )}
+                    </TableHeader>
+                    <TableBody emptyContent={"No rows to display."}>
+                      {modalRow.ingredients.map((row: any) => (
+                        <TableRow key={row.id}>
+                          <TableCell className="text-center">{row.name}</TableCell>
+                          <TableCell className="text-center">{row.qty}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div className=" flex justify-center gap-5">
+                    <div>
+                      <span className="mr-1 font-semibold">Proteins:</span>
+                      <span>{modalRow.proteins}</span>
+                    </div>
+                    <div>
+                      <span className="mr-1 font-semibold">Calories:</span>
+                      <span>{modalRow.calories}</span>
+                    </div>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      )}
     </Fragment>
   );
 };

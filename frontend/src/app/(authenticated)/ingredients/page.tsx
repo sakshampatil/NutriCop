@@ -50,12 +50,12 @@ const IngredientsPage = () => {
   const [sortBy, setSortBy] = useState(new Set(["name"]));
   const [desc, setDesc] = useState<boolean>(false);
 
-  const { data, error, isLoading } = useGetIngredientsPaginatedListQuery(
+  const { data, error, isLoading, refetch } = useGetIngredientsPaginatedListQuery(
     { name: searchVal, page: page, pageSize: 2, sortBy: sortBy, desc: desc },
     { refetchOnMountOrArgChange: true }
   );
 
-  const [deleteItem, { isSuccess }] = useDeleteIngredientMutation();
+  const [deleteItem, { isSuccess: isDeleteSuccess }] = useDeleteIngredientMutation();
 
   useEffect(() => {
     if (session.data?.user.accessToken) {
@@ -65,8 +65,10 @@ const IngredientsPage = () => {
   }, [session.data?.user.accessToken]);
 
   useEffect(() => {
-    console.log("SORT By = ", sortBy);
-  }, [sortBy]);
+    if (isDeleteSuccess) {
+      refetch();
+    }
+  }, [isDeleteSuccess]);
 
   const onSearchChange = useCallback((val: string) => {
     if (val) {

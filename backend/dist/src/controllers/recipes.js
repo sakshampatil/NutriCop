@@ -63,12 +63,42 @@ const update = async (req, res, next) => {
 exports.update = update;
 const list = async (req, res, next) => {
     try {
-        const query = req.query;
-        const params = req.params;
-        const recipesList = await db_1.db.query.recipes.findMany({
-            where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_1.recipes.userId, params.userId), (0, drizzle_orm_1.like)(recipes_1.recipes.name, `%${query.search}%`)),
-        });
-        (0, responseHandler_1.responseHandler)(res, recipesList);
+        const search = req.query.search;
+        const page = parseInt(req.query.page)
+            ? parseInt(req.query.page)
+            : 1;
+        const pageSize = parseInt(req.query.pageSize)
+            ? parseInt(req.query.pageSize)
+            : 10000;
+        const sortBy = req.query.sortBy;
+        const descending = req.query.desc === "true" ? true : false;
+        const allowedSortByFields = ["name", "calories", "proteins"];
+        const isAllowedSortBy = allowedSortByFields.includes(sortBy);
+        const orderByClause = isAllowedSortBy ? recipes_1.recipes[sortBy] : "name";
+        const startIdx = (page - 1) * pageSize;
+        const endIdx = page * pageSize;
+        let items = [];
+        if (descending) {
+            items = await db_1.db
+                .select()
+                .from(recipes_1.recipes)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_1.recipes.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(recipes_1.recipes.name, `%${search}%`)))
+                .orderBy((0, drizzle_orm_1.desc)(orderByClause));
+        }
+        else {
+            items = await db_1.db
+                .select()
+                .from(recipes_1.recipes)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_1.recipes.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.like)(recipes_1.recipes.name, `%${search}%`)))
+                .orderBy((0, drizzle_orm_1.asc)(orderByClause));
+        }
+        const totalPages = Math.ceil(items.length / pageSize);
+        const paginatedItems = items.slice(startIdx, endIdx);
+        const data = {
+            recipes: paginatedItems,
+            totalPages: totalPages,
+        };
+        (0, responseHandler_1.responseHandler)(res, data);
     }
     catch (err) {
         next(err);

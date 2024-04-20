@@ -86,7 +86,7 @@ export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: Ne
 
     const totalPages = Math.ceil(items.length / pageSize);
     const paginatedItems = items.slice(startIdx, endIdx);
-    console.log("ITEMS =", paginatedItems);
+
     const data = {
       ingredients: paginatedItems,
       totalPages: totalPages,

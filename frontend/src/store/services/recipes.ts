@@ -17,7 +17,7 @@ export const recipesApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getRecipesList: builder.query<any, any>({
+    getRecipesPaginatedList: builder.query<any, any>({
       query: ({ name, page, pageSize, sortBy, desc }) => {
         let [head]: any = sortBy;
         return `recipes/list?search=${name}&page=${page}&pageSize=${pageSize}&sortBy=${head}&desc=${desc}`;
@@ -30,14 +30,14 @@ export const recipesApi = createApi({
         body: body,
       }),
     }),
-    deleteIngredient: builder.mutation<any, number>({
+    deleteRecipe: builder.mutation<any, number>({
       query: (id) => ({
-        url: `ingredients/delete/${id}`,
+        url: `recipes/delete/${id}`,
         method: "DELETE",
       }),
     }),
   }),
 });
 
-export const { useGetRecipesListQuery, useCreateRecipeMutation, useDeleteIngredientMutation } =
+export const { useGetRecipesPaginatedListQuery, useCreateRecipeMutation, useDeleteRecipeMutation } =
   recipesApi;

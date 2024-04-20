@@ -9,7 +9,7 @@ import {
   useErrorHandler,
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
-import { eq, and, like } from "drizzle-orm";
+import { eq, and, like, desc, asc } from "drizzle-orm";
 import { recipes } from "../schema/recipes";
 import { IGetUserAuthInfoRequest } from "../types/types";
 
@@ -61,16 +61,50 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
-    const query = req.query;
-    const params: any = req.params;
+    const search: string = req.query.search as string;
+    const page: number = parseInt(req.query.page as string)
+      ? parseInt(req.query.page as string)
+      : 1;
+    const pageSize: number = parseInt(req.query.pageSize as string)
+      ? parseInt(req.query.pageSize as string)
+      : 10000;
+    const sortBy: string = req.query.sortBy as string;
+    const descending: boolean = req.query.desc === "true" ? true : false;
 
-    const recipesList = await db.query.recipes.findMany({
-      where: and(eq(recipes.userId, params.userId), like(recipes.name, `%${query.search}%`)),
-    });
+    const allowedSortByFields = ["name", "calories", "proteins"];
 
-    responseHandler(res, recipesList);
+    const isAllowedSortBy = allowedSortByFields.includes(sortBy);
+    const orderByClause = isAllowedSortBy ? (recipes as any)[sortBy] : "name";
+
+    const startIdx = (page - 1) * pageSize;
+    const endIdx = page * pageSize;
+
+    let items = [];
+
+    if (descending) {
+      items = await db
+        .select()
+        .from(recipes)
+        .where(and(eq(recipes.userId, Number(req?.user)), like(recipes.name, `%${search}%`)))
+        .orderBy(desc(orderByClause));
+    } else {
+      items = await db
+        .select()
+        .from(recipes)
+        .where(and(eq(recipes.userId, Number(req?.user)), like(recipes.name, `%${search}%`)))
+        .orderBy(asc(orderByClause));
+    }
+
+    const totalPages = Math.ceil(items.length / pageSize);
+    const paginatedItems = items.slice(startIdx, endIdx);
+
+    const data = {
+      recipes: paginatedItems,
+      totalPages: totalPages,
+    };
+    responseHandler(res, data);
   } catch (err) {
     next(err);
   }

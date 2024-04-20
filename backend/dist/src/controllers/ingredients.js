@@ -70,7 +70,6 @@ const list = async (req, res, next) => {
         }
         const totalPages = Math.ceil(items.length / pageSize);
         const paginatedItems = items.slice(startIdx, endIdx);
-        console.log("ITEMS =", paginatedItems);
         const data = {
             ingredients: paginatedItems,
             totalPages: totalPages,
