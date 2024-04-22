@@ -8,6 +8,7 @@ export const meals = pgTable("meals", {
   userId: integer("userd_id").notNull(),
   mealNo: integer("meal_no").notNull(),
   day: varchar("day", { length: 10 }).notNull(),
+  time: varchar("time", { length: 10 }).notNull(),
   recipes: json("recipes").$type<{ recipeId: number; qty: number }[]>(),
   proteins: integer("proteins").notNull(),
   calories: integer("calories").notNull(),

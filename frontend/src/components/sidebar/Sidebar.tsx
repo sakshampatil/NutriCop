@@ -68,7 +68,7 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
           "transition-[grid-template-columns] duration-300 ease-in-out": true,
         })}
       > */}
-      <div className=" bg-light-black text-white pt-2  pl-2 flex flex-col justify-between ">
+      <div className=" bg-black border-r-medium rounded-tr-2xl text-white pt-2  pl-2 flex flex-col justify-between ">
         {/* header */}
         <div>
           <div className="flex items-center gap-1">
@@ -96,16 +96,15 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
               <Link
                 key={e.label}
                 href={e.path}
-                className="flex items-center gap-2 cursor-pointer mb-4"
+                className="flex items-center gap-2 cursor-pointer mb-4 hover:bg-light-black"
               >
                 <span
                   className={cn({
                     "text-2xl": !collapsed,
                     "text-3xl": collapsed,
-                    "text-blue-500": true,
                   })}
                 >
-                  {e.icon}
+                  {collapsed && e.icon}
                 </span>
                 <span className="font-semibold text-lg">{!collapsed && e.label}</span>
               </Link>
