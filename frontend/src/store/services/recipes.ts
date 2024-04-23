@@ -23,6 +23,9 @@ export const recipesApi = createApi({
         return `recipes/list?search=${name}&page=${page}&pageSize=${pageSize}&sortBy=${head}&desc=${desc}`;
       },
     }),
+    getRecipesList: builder.query<any, any>({
+      query: ({ name }) => `recipes/list?search=${name}`,
+    }),
     createRecipe: builder.mutation<any, IRecipe>({
       query: (body) => ({
         url: `recipes/create`,
@@ -39,5 +42,9 @@ export const recipesApi = createApi({
   }),
 });
 
-export const { useGetRecipesPaginatedListQuery, useCreateRecipeMutation, useDeleteRecipeMutation } =
-  recipesApi;
+export const {
+  useGetRecipesPaginatedListQuery,
+  useGetRecipesListQuery,
+  useCreateRecipeMutation,
+  useDeleteRecipeMutation,
+} = recipesApi;

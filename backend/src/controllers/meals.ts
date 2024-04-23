@@ -12,12 +12,14 @@ import { responseHandler } from "../service/responseHandler";
 import { meals } from "../schema/meals";
 import { days } from "../schema/days";
 import { and, eq, sql } from "drizzle-orm";
+import { IGetUserAuthInfoRequest } from "../types/types";
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const create = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
+    body.userId = Number(req.user);
 
     if (!body.mealNo || !body.proteins || !body.calories || !body.userId) {
       throw new BadRequest("Bad Request!");
@@ -55,6 +57,36 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     responseHandler(res, insertedMeal);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+  try {
+    let morningArry = await db
+      .select()
+      .from(meals)
+      .where(and(eq(meals.userId, Number(req?.user)), eq(meals.time, "Morning")));
+
+    let afternoonArry = await db
+      .select()
+      .from(meals)
+      .where(and(eq(meals.userId, Number(req?.user)), eq(meals.time, "Afternoon")));
+
+    let eveningArry = await db
+      .select()
+      .from(meals)
+      .where(and(eq(meals.userId, Number(req?.user)), eq(meals.time, "Evening")));
+
+    const data = {
+      meals: {
+        morning: morningArry,
+        afternoon: afternoonArry,
+        evening: eveningArry,
+      },
+    };
+    responseHandler(res, data);
   } catch (err) {
     next(err);
   }

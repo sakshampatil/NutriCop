@@ -25,7 +25,7 @@ const sideContent = [
   {
     label: "Meals",
     icon: <GiMeal />,
-    path: "/dashboard",
+    path: "/meals",
   },
   {
     label: "Recipes",

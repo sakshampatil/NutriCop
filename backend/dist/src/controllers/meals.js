@@ -11,7 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMeal = exports.findBasedOnId = exports.update = exports.create = void 0;
+exports.deleteMeal = exports.findBasedOnId = exports.update = exports.list = exports.create = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const responseHandler_1 = require("../service/responseHandler");
@@ -22,6 +22,7 @@ const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Fri
 const create = async (req, res, next) => {
     try {
         const body = req.body;
+        body.userId = Number(req.user);
         if (!body.mealNo || !body.proteins || !body.calories || !body.userId) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
@@ -60,6 +61,34 @@ const create = async (req, res, next) => {
     }
 };
 exports.create = create;
+const list = async (req, res, next) => {
+    try {
+        let morningArry = await db_1.db
+            .select()
+            .from(meals_1.meals)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(meals_1.meals.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.eq)(meals_1.meals.time, "Morning")));
+        let afternoonArry = await db_1.db
+            .select()
+            .from(meals_1.meals)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(meals_1.meals.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.eq)(meals_1.meals.time, "Afternoon")));
+        let eveningArry = await db_1.db
+            .select()
+            .from(meals_1.meals)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(meals_1.meals.userId, Number(req === null || req === void 0 ? void 0 : req.user)), (0, drizzle_orm_1.eq)(meals_1.meals.time, "Evening")));
+        const data = {
+            meals: {
+                morning: morningArry,
+                afternoon: afternoonArry,
+                evening: eveningArry,
+            },
+        };
+        (0, responseHandler_1.responseHandler)(res, data);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.list = list;
 const update = async (req, res, next) => {
     try {
         const _a = req.body, { recipes } = _a, mealBody = __rest(_a, ["recipes"]);

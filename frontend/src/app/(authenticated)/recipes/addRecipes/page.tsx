@@ -123,12 +123,10 @@ const AddRecipesPage = () => {
     });
   };
   const onSelectionChange = (key: any) => {
-    console.log("KEY = ", key);
     setSelectedKey(key);
     // setSelectedVal(key);
   };
   const onInputChange = (value: string) => {
-    console.log("VALUE = ", value);
     setSelectedVal(value);
   };
 

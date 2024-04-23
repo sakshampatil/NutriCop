@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer, json } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, integer, json, date } from "drizzle-orm/pg-core";
 // import { recipes } from "./recipes";
 // import { days } from "./days";
 // import { relations } from "drizzle-orm";
