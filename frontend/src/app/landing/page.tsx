@@ -1,9 +1,12 @@
 import { Fragment } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import { Button } from "@nextui-org/button";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
+import { redirect } from "next/navigation";
 
 import Link from "next/link";
+import { getServerSession } from "next-auth/next";
+import { signIn } from "next-auth/react";
 
 const LandingPage: NextPage = () => {
   return (
@@ -16,8 +19,11 @@ const LandingPage: NextPage = () => {
         <h2 className="text-2xl font-semibold">
           Empowering Healthier Choices with Easy Calorie and Protein Tracking
         </h2>
-        <Button className="bg-blue-600 rounded-lg px-3 py-2 text-lg mt-3 font-semibold">
-          <Link href="/api/auth/signin">Get Started</Link>
+        <Button
+          onPress={() => signIn("google", { callbackUrl: "/dashboard" })}
+          className="bg-blue-600 rounded-lg px-3 py-2 text-lg mt-3 font-semibold"
+        >
+          Get Started
         </Button>
       </div>
     </Fragment>

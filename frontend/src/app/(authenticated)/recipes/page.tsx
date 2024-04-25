@@ -68,13 +68,6 @@ const IngredientsPage = () => {
   const [deleteItem, { isSuccess: isDeleteSuccess }] = useDeleteRecipeMutation();
 
   useEffect(() => {
-    if (session.data?.user.accessToken) {
-      localStorage.setItem("token", session.data.user.accessToken);
-      // refetch();
-    }
-  }, [session.data?.user.accessToken]);
-
-  useEffect(() => {
     if (isDeleteSuccess) {
       refetch();
     }

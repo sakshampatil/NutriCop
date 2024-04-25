@@ -47,7 +47,7 @@ const handler = NextAuth({
         if (!profile?.email) {
           throw new Error("NO profile");
         }
-        // console.log("PROFILE = ", profile);
+        console.log("PROFILE = ", profile);
 
         const response = await fetch("http://localhost:3001/api/v1/auth/signIn", {
           method: "POST",

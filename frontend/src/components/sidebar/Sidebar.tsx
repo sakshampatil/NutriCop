@@ -54,8 +54,8 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
   const { data: session } = useSession();
 
   const logout = () => {
-    signOut({ redirect: false });
-    router.push("/");
+    signOut({ callbackUrl: "/" });
+    // router.push("/");
   };
 
   return (

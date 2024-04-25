@@ -64,11 +64,13 @@ const signIn = async (req, res, next) => {
             .from(users_1.users)
             .where((0, drizzle_orm_1.eq)(users_1.users.email, body.email))}) AS exists
 `;
+        console.log("BODYYYY =", body);
         const result = await db_1.db.execute(existsQuery);
         const recordExists = result[0].exists;
         let user;
         if (recordExists) {
             //update name
+            console.log("UPDATEEE");
             user = await db_1.db
                 .update(users_1.users)
                 .set({ name: body.name })
@@ -81,6 +83,7 @@ const signIn = async (req, res, next) => {
         }
         else {
             //insert user
+            console.log("INSERTTT");
             user = await db_1.db.insert(users_1.users).values({ email: body.email, name: body.name }).returning({
                 id: users_1.users.id,
                 targetProteins: users_1.users.targetProteins,

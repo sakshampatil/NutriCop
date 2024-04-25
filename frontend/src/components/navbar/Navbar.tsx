@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import logo from "../../../assets/calories tracker logo.png";
+import { signIn } from "next-auth/react";
 
 const Navbar: FC = () => {
   return (
@@ -14,8 +15,12 @@ const Navbar: FC = () => {
         <div className="text-white font-bold text-xl">NutriCop</div>
       </div>
       <div className="">
-        <Button radius="full" className="text-white bg-blue-600 px-3 py-2 rounded-lg font-normal">
-          <Link href="/api/auth/signin">Login</Link>
+        <Button
+          onPress={() => signIn("google", { callbackUrl: "/dashboard" })}
+          radius="full"
+          className="text-white bg-blue-600 px-3 py-2 rounded-lg font-normal"
+        >
+          Login
         </Button>
       </div>
     </div>
