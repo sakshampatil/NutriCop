@@ -59,29 +59,32 @@ const handler = NextAuth({
 
         const res = await response.json();
         user.accessToken = res?.token;
+        user.targetProteins = res?.targetProteins;
+        user.targetCalories = res?.targetCalories;
         console.log("RESpo = ", res);
         return true;
       } catch (error) {
         return false;
       }
     },
-    async jwt({ token, account, user }) {
-      // Persist the OAuth access_token to the token right after signin
-      // if (account) {
-      //   // console.log("Tok = ", token);
-      //   // console.log("ACC = ", account);
-      //   token.accessToken = account.access_token;
-      // }
+    async jwt({ token, account, user, trigger, session }) {
       if (user) {
-        token = { accessToken: user.accessToken };
+        token = {
+          accessToken: user.accessToken,
+          targetProteins: user.targetProteins,
+          targetCalories: user.targetCalories,
+        };
       }
 
       return token;
       // localStorage.setItem("Token", account?.access_token as string);
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Send properties to the client, like an access_token from a provider.
+
       session.user.accessToken = token.accessToken as string;
+      session.user.targetProteins = token.targetProteins as number;
+      session.user.targetCalories = token.targetCalories as number;
       return session;
     },
   },

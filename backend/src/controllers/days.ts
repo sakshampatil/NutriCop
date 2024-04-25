@@ -10,16 +10,25 @@ import {
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
 import { days } from "../schema/days";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { users } from "../schema/users";
+import { IGetUserAuthInfoRequest } from "../types/types";
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
-  const params: any = req.params;
+export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
-    const daysList = await db.query.days.findMany({
-      where: eq(days.userId, params.userId),
-    });
+    const dayRequested = req.query.day as string;
 
-    responseHandler(res, daysList);
+    if (dayRequested) {
+      const day = await db.query.days.findFirst({
+        where: and(eq(days.userId, Number(req?.user)), eq(days.day, dayRequested)),
+      });
+      responseHandler(res, day);
+    } else {
+      const daysList = await db.query.days.findMany({
+        where: eq(days.userId, Number(req?.user)),
+      });
+      responseHandler(res, daysList);
+    }
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import { db } from "../db";
-import { IUser } from "../types/types";
+import { IGetUserAuthInfoRequest, IUser } from "../types/types";
 import { BadRequest } from "../service/errorHandler";
 import { users } from "../schema/users";
 import { eq, sql } from "drizzle-orm";
@@ -83,13 +83,18 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
         .update(users)
         .set({ name: body.name })
         .where(eq(users.email, body.email))
-        .returning({ id: users.id });
+        .returning({
+          id: users.id,
+          targetProteins: users.targetProteins,
+          targetCalories: users.targetCalories,
+        });
     } else {
       //insert user
-      user = await db
-        .insert(users)
-        .values({ email: body.email, name: body.name })
-        .returning({ id: users.id });
+      user = await db.insert(users).values({ email: body.email, name: body.name }).returning({
+        id: users.id,
+        targetProteins: users.targetProteins,
+        targetCalories: users.targetCalories,
+      });
     }
 
     console.log("exists = ", recordExists);
@@ -108,9 +113,44 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
     );
     res.send({
       token: token,
+      targetProteins: user[0].targetProteins,
+      targetCalories: user[0].targetCalories,
     });
 
     // responseHandler(res, user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUser = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+  try {
+    const target = await db.query.users.findFirst({
+      where: eq(users.id, Number(req?.user)),
+    });
+    responseHandler(res, target);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateTarget = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body = req.body;
+    if (!body.targetProteins || !body.targetCalories) {
+      throw new BadRequest("Bad Request!");
+    }
+
+    const updatedUser = await db
+      .update(users)
+      .set({ targetCalories: body.targetCalories, targetProteins: body.targetProteins })
+      .where(eq(users.id, Number(req?.user)));
+
+    responseHandler(res, updatedUser);
   } catch (err) {
     next(err);
   }

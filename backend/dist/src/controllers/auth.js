@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signIn = void 0;
+exports.updateTarget = exports.getUser = exports.signIn = void 0;
 const db_1 = require("../db");
 const errorHandler_1 = require("../service/errorHandler");
 const users_1 = require("../schema/users");
 const drizzle_orm_1 = require("drizzle-orm");
+const responseHandler_1 = require("../service/responseHandler");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // export const signup = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
@@ -72,14 +73,19 @@ const signIn = async (req, res, next) => {
                 .update(users_1.users)
                 .set({ name: body.name })
                 .where((0, drizzle_orm_1.eq)(users_1.users.email, body.email))
-                .returning({ id: users_1.users.id });
+                .returning({
+                id: users_1.users.id,
+                targetProteins: users_1.users.targetProteins,
+                targetCalories: users_1.users.targetCalories,
+            });
         }
         else {
             //insert user
-            user = await db_1.db
-                .insert(users_1.users)
-                .values({ email: body.email, name: body.name })
-                .returning({ id: users_1.users.id });
+            user = await db_1.db.insert(users_1.users).values({ email: body.email, name: body.name }).returning({
+                id: users_1.users.id,
+                targetProteins: users_1.users.targetProteins,
+                targetCalories: users_1.users.targetCalories,
+            });
         }
         console.log("exists = ", recordExists);
         // const user = await db
@@ -94,6 +100,8 @@ const signIn = async (req, res, next) => {
         const token = await jsonwebtoken_1.default.sign({ email: body.email, userId: user[0].id }, process.env.SECRET_KEY);
         res.send({
             token: token,
+            targetProteins: user[0].targetProteins,
+            targetCalories: user[0].targetCalories,
         });
         // responseHandler(res, user);
     }
@@ -102,3 +110,32 @@ const signIn = async (req, res, next) => {
     }
 };
 exports.signIn = signIn;
+const getUser = async (req, res, next) => {
+    try {
+        const target = await db_1.db.query.users.findFirst({
+            where: (0, drizzle_orm_1.eq)(users_1.users.id, Number(req === null || req === void 0 ? void 0 : req.user)),
+        });
+        (0, responseHandler_1.responseHandler)(res, target);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.getUser = getUser;
+const updateTarget = async (req, res, next) => {
+    try {
+        const body = req.body;
+        if (!body.targetProteins || !body.targetCalories) {
+            throw new errorHandler_1.BadRequest("Bad Request!");
+        }
+        const updatedUser = await db_1.db
+            .update(users_1.users)
+            .set({ targetCalories: body.targetCalories, targetProteins: body.targetProteins })
+            .where((0, drizzle_orm_1.eq)(users_1.users.id, Number(req === null || req === void 0 ? void 0 : req.user)));
+        (0, responseHandler_1.responseHandler)(res, updatedUser);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.updateTarget = updateTarget;
