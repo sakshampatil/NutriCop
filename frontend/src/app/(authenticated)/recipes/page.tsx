@@ -57,11 +57,12 @@ const IngredientsPage = () => {
   const [sortBy, setSortBy] = useState(new Set(["name"]));
   const [desc, setDesc] = useState<boolean>(false);
   const [modalRow, setModalRow] = useState<any | null>(null);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(2);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { data, error, isLoading, refetch } = useGetRecipesPaginatedListQuery(
-    { name: searchVal, page: page, pageSize: 2, sortBy: sortBy, desc: desc },
+    { name: searchVal, page: page, pageSize: rowsPerPage, sortBy: sortBy, desc: desc },
     { refetchOnMountOrArgChange: true }
   );
 
@@ -88,6 +89,11 @@ const IngredientsPage = () => {
 
   const onClear = useCallback(() => {
     setSearchVal("");
+    setPage(1);
+  }, []);
+
+  const onRowsPerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
 
@@ -143,20 +149,33 @@ const IngredientsPage = () => {
           </button>
         </div>
         {/* add new  */}
-        <Button color="primary">
-          <Link className="flex items-center justify-center gap-1" href={"/recipes/addRecipes"}>
+        <Link className="flex items-center justify-center gap-1" href={"/recipes/addRecipes"}>
+          <Button color="primary">
             <span>Add Recipe</span>
             <span>
               <FaPlus />
             </span>
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
       {/* table  */}
       <div className="mt-6">
         <Table
           aria-label="Reccipes Table"
           classNames={{ table: "bg-black", wrapper: "bg-black" }}
+          topContent={
+            <label className="flex justify-end items-center text-default-400 text-small">
+              Rows per page:
+              <select
+                className="bg-light-black border-0 rounded-lg outline-none text-default-400 text-small dark"
+                onChange={onRowsPerPageChange}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </label>
+          }
           bottomContent={
             <div className="flex justify-center">
               <Pagination

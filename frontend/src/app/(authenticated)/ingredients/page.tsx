@@ -49,9 +49,10 @@ const IngredientsPage = () => {
   const [page, setPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState(new Set(["name"]));
   const [desc, setDesc] = useState<boolean>(false);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(2);
 
   const { data, error, isLoading, refetch } = useGetIngredientsPaginatedListQuery(
-    { name: searchVal, page: page, pageSize: 2, sortBy: sortBy, desc: desc },
+    { name: searchVal, page: page, pageSize: rowsPerPage, sortBy: sortBy, desc: desc },
     { refetchOnMountOrArgChange: true }
   );
 
@@ -70,6 +71,11 @@ const IngredientsPage = () => {
     } else {
       setSearchVal("");
     }
+  }, []);
+
+  const onRowsPerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+    setPage(1);
   }, []);
 
   const onClear = useCallback(() => {
@@ -139,8 +145,21 @@ const IngredientsPage = () => {
       {/* table  */}
       <div className="mt-6">
         <Table
-          aria-label="Example table with dynamic content"
+          aria-label="Rows per Page dropdown"
           classNames={{ table: "bg-black", wrapper: "bg-black" }}
+          topContent={
+            <label className="flex justify-end items-center text-default-400 text-small">
+              Rows per page:
+              <select
+                className="bg-light-black border-0 rounded-lg outline-none text-default-400 text-small dark"
+                onChange={onRowsPerPageChange}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </label>
+          }
           bottomContent={
             <div className="flex justify-center">
               <Pagination
