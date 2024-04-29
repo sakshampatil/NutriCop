@@ -20,7 +20,7 @@ const LandingPage: NextPage = () => {
           Empowering Healthier Choices with Easy Calorie and Protein Tracking
         </h2>
         <Button
-          onPress={() => signIn("google", { callbackUrl: "/dashboard" })}
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           className="bg-blue-600 rounded-lg px-3 py-2 text-lg mt-3 font-semibold"
         >
           Get Started

@@ -18,7 +18,9 @@ const list = async (req, res, next) => {
         else {
             const daysList = await db_1.db.query.days.findMany({
                 where: (0, drizzle_orm_1.eq)(days_1.days.userId, Number(req === null || req === void 0 ? void 0 : req.user)),
+                orderBy: [(0, drizzle_orm_1.asc)(days_1.days.id)],
             });
+            console.log("DAYS LIST =", daysList);
             (0, responseHandler_1.responseHandler)(res, daysList);
         }
     }

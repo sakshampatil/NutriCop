@@ -10,7 +10,7 @@ import {
 } from "../service/errorHandler";
 import { responseHandler } from "../service/responseHandler";
 import { days } from "../schema/days";
-import { eq, and } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 import { users } from "../schema/users";
 import { IGetUserAuthInfoRequest } from "../types/types";
 
@@ -26,7 +26,9 @@ export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: Ne
     } else {
       const daysList = await db.query.days.findMany({
         where: eq(days.userId, Number(req?.user)),
+        orderBy: [asc(days.id)],
       });
+      console.log("DAYS LIST =", daysList);
       responseHandler(res, daysList);
     }
   } catch (err) {

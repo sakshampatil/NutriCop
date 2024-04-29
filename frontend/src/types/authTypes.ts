@@ -4,3 +4,8 @@ export interface IUser {
   image: string | null;
   accessToken?: string | null;
 }
+
+export interface ITarget {
+  targetProteins: number;
+  targetCalories: number;
+}

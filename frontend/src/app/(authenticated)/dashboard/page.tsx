@@ -23,7 +23,7 @@ import { Slider } from "@nextui-org/slider";
 
 import { FaRegFaceSmileBeam, FaRegFaceTired, FaRegFaceMeh } from "react-icons/fa6";
 import { Input } from "@nextui-org/input";
-import { ITarget } from "@/types/dayTypes";
+import { ITarget } from "@/types/authTypes";
 import { useGetUserQuery, useUpdatetargetMutation } from "@/store/services/auth";
 import { useGetDaysQuery } from "@/store/services/days";
 
@@ -38,7 +38,7 @@ enum sliderColor {
 
 const DashoardPage = () => {
   const { data: session, status, update } = useSession();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const { data: user, error, isLoading, refetch } = useGetUserQuery({});
   const {

@@ -38,9 +38,9 @@ const sideContent = [
     path: "/ingredients",
   },
   {
-    label: "Days",
+    label: "Week",
     icon: <LuCalendarDays />,
-    path: "/dashboard",
+    path: "/days",
   },
 ];
 
