@@ -20,6 +20,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
       <div
         className={cn({
           "grid min-h-screen": true,
+
           "grid-cols-sidebar": !collapsed,
           "grid-cols-sidebar-collapsed": collapsed,
           "transition-[grid-template-columns] duration-300 ease-in-out": true,
@@ -28,7 +29,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
         {/* sidebar */}
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
         {/* content */}
-        <div className="ml-6 mt-6"> {children}</div>
+        <div className="ml-7 mt-6"> {children}</div>
       </div>
     </Fragment>
   );

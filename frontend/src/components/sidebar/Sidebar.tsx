@@ -68,7 +68,7 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
           "transition-[grid-template-columns] duration-300 ease-in-out": true,
         })}
       > */}
-      <div className=" bg-black border-r-medium rounded-tr-2xl text-white pt-2  pl-2 flex flex-col justify-between ">
+      <div className=" bg-black border-r-medium border-r-gray-500 rounded-tr-2xl text-white pt-2  pl-2 flex flex-col justify-between ">
         {/* header */}
         <div>
           <div className="flex items-center gap-1">
@@ -77,36 +77,33 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
           </div>
           <button
             className={cn({
-              "absolute left-[260px] top-6": !collapsed,
+              "absolute left-[170px] top-6": !collapsed,
               "absolute left-[58px] top-6": collapsed,
               "transition duration-500 ease-in-out": true,
             })}
             onClick={() => setCollapsed((prev) => !prev)}
           >
             {collapsed ? (
-              <FaArrowCircleRight className="w-7 h-7 text-blue-500 " />
+              <FaArrowCircleRight className="w-7 h-7 text-gray-200 " />
             ) : (
-              <FaArrowCircleLeft className="w-7 h-7  text-blue-500" />
+              <FaArrowCircleLeft className="w-7 h-7  text-gray-200" />
             )}
           </button>
-          <hr className="-ml-2 mt-2 mb-4" />
+          <hr className="-ml-2 border-gray-500 mt-2 mb-4" />
           {/* content */}
-          <div className="pl-2 ">
+          <div className=" w-full -ml-2 flex flex-col items-center gap-4">
             {sideContent.map((e, index) => (
-              <Link
-                key={e.label}
-                href={e.path}
-                className="flex items-center gap-2 cursor-pointer mb-4 hover:bg-light-black"
-              >
+              <Link key={e.label} href={e.path} className="cursor-pointer hover:bg-light-black">
                 <span
                   className={cn({
                     "text-2xl": !collapsed,
                     "text-3xl": collapsed,
+                    "text-gray-500": true,
                   })}
                 >
                   {collapsed && e.icon}
                 </span>
-                <span className="font-semibold text-lg">{!collapsed && e.label}</span>
+                <span className="font-semibold text-lg text-gray-300">{!collapsed && e.label}</span>
               </Link>
             ))}
           </div>
