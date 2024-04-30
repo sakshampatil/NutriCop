@@ -93,7 +93,11 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
           {/* content */}
           <div className=" w-full -ml-2 flex flex-col items-center gap-4">
             {sideContent.map((e, index) => (
-              <Link key={e.label} href={e.path} className="cursor-pointer hover:bg-light-black">
+              <Link
+                key={e.label}
+                href={e.path}
+                className="cursor-pointer px-2 rounded-2xl py-1 hover:bg-light-black"
+              >
                 <span
                   className={cn({
                     "text-2xl": !collapsed,
