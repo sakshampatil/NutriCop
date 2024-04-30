@@ -253,7 +253,7 @@ const MealsPage = () => {
                   <div className="flex flex-col items-center">
                     <span
                       onClick={() => deleteMeal(ele.id)}
-                      className="absolute top-2 right-2 text-red-500 text-lg"
+                      className="absolute top-1 right-1 text-red-500 text-lg hover:bg-light-black p-1 rounded-full"
                     >
                       <RxCross2 />
                     </span>
@@ -290,17 +290,12 @@ const MealsPage = () => {
         <section className="flex gap-2 mt-1">
           {mealsListData?.data?.meals?.afternoon?.map((ele: any) => {
             return (
-              <Card
-                shadow="sm"
-                key={ele.mealNo}
-                isPressable
-                onPress={() => console.log("item pressed")}
-              >
+              <Card shadow="sm" key={ele.mealNo} isPressable onPress={() => onCardClick(ele)}>
                 <CardBody className="overflow-visible flex flex-col justify-between px-6 py-2">
                   <div className="flex flex-col items-center">
                     <span
                       onClick={() => deleteMeal(ele.id)}
-                      className="absolute top-2 right-2 text-red-500 text-lg"
+                      className="absolute top-1 right-1 text-red-500 text-lg hover:bg-light-black p-1 rounded-full"
                     >
                       <RxCross2 />
                     </span>
@@ -346,7 +341,7 @@ const MealsPage = () => {
                   <div className="flex flex-col items-center">
                     <span
                       onClick={() => deleteMeal(ele.id)}
-                      className="absolute top-2 right-2 text-red-500 text-lg"
+                      className="absolute top-1 right-1 text-red-500 text-lg hover:bg-light-black p-1 rounded-full"
                     >
                       <RxCross2 />
                     </span>

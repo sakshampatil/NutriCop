@@ -18,7 +18,7 @@ const Navbar: FC = () => {
         <Button
           onPress={() => signIn("google", { callbackUrl: "/dashboard" })}
           radius="full"
-          className="text-white bg-blue-600 px-3 py-2 rounded-lg font-normal"
+          className="text-white text-medium bg-blue-600 px-3 py-2 rounded-lg font-semibold"
         >
           Login
         </Button>
