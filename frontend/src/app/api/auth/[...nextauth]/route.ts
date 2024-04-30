@@ -61,7 +61,8 @@ const handler = NextAuth({
         user.accessToken = res?.token;
         user.targetProteins = res?.targetProteins;
         user.targetCalories = res?.targetCalories;
-        console.log("RESpo = ", res);
+
+        console.log("user = ", user);
         return true;
       } catch (error) {
         return false;
@@ -73,18 +74,24 @@ const handler = NextAuth({
           accessToken: user.accessToken,
           targetProteins: user.targetProteins,
           targetCalories: user.targetCalories,
+          email: user.email,
+          name: user.name,
+          image: user?.image,
         };
       }
 
       return token;
       // localStorage.setItem("Token", account?.access_token as string);
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
 
       session.user.accessToken = token.accessToken as string;
       session.user.targetProteins = token.targetProteins as number;
       session.user.targetCalories = token.targetCalories as number;
+      session.user.email = token.email as string;
+      session.user.image = token?.image as string;
+      session.user.name = token?.name as string;
       return session;
     },
   },

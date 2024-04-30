@@ -13,50 +13,33 @@ import { days } from "../schema/days";
 import { eq, and, asc } from "drizzle-orm";
 import { users } from "../schema/users";
 import { IGetUserAuthInfoRequest } from "../types/types";
+import { getToday } from "../service/helper";
 
 export const list = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {
-    const dayRequested = req.query.day as string;
+    const daysList = await db.query.days.findMany({
+      where: eq(days.userId, Number(req?.user)),
+      orderBy: [asc(days.id)],
+    });
 
-    if (dayRequested) {
-      const day = await db.query.days.findFirst({
-        where: and(eq(days.userId, Number(req?.user)), eq(days.day, dayRequested)),
-      });
-      responseHandler(res, day);
-    } else {
-      const daysList = await db.query.days.findMany({
-        where: eq(days.userId, Number(req?.user)),
-        orderBy: [asc(days.id)],
-      });
-      console.log("DAYS LIST =", daysList);
-      responseHandler(res, daysList);
-    }
+    responseHandler(res, daysList);
   } catch (err) {
     next(err);
   }
 };
 
-export const findBasedOnId = async (req: Request, res: Response, next: NextFunction) => {
+export const findBasedOnDay = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const params = req.params;
-    if (!params.id) {
-      throw new BadRequest("Bad Request!");
-    }
-
+    let today = getToday();
+    console.log("today =", req?.user);
     const day = await db.query.days.findFirst({
-      where: eq(days.id, Number(params.id)),
-      // with: {
-      //   meals: {
-      //     with: {
-      //       mealsRecipies: {
-      //         with: {
-      //           recipes: true,
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
+      where: and(eq(days.userId, Number(req?.user)), eq(days.day, today)),
     });
+    console.log("DAY =", day);
     responseHandler(res, day);
   } catch (err) {
     next(err);

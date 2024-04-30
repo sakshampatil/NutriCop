@@ -5,5 +5,5 @@ const days_1 = require("../controllers/days");
 const auth_1 = require("../middlewares/auth");
 const router = (0, express_1.Router)();
 router.route("/list").get(auth_1.verifyToken, days_1.list);
-router.route("/list/:id").get(auth_1.verifyToken, days_1.findBasedOnId);
+router.route("/day").get(auth_1.verifyToken, days_1.findBasedOnDay);
 exports.default = router;

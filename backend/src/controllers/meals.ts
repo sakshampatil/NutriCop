@@ -13,14 +13,7 @@ import { meals } from "../schema/meals";
 import { days } from "../schema/days";
 import { and, eq, sql } from "drizzle-orm";
 import { IGetUserAuthInfoRequest } from "../types/types";
-
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-const getToday = (): string => {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  return daysOfWeek[dayOfWeek];
-};
+import { getToday } from "../service/helper";
 
 export const create = async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
   try {

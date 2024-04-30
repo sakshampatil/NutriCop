@@ -25,7 +25,7 @@ import { FaRegFaceSmileBeam, FaRegFaceTired, FaRegFaceMeh } from "react-icons/fa
 import { Input } from "@nextui-org/input";
 import { ITarget } from "@/types/authTypes";
 import { useGetUserQuery, useUpdatetargetMutation } from "@/store/services/auth";
-import { useGetDaysQuery } from "@/store/services/days";
+import { useGetDayQuery } from "@/store/services/days";
 
 enum sliderColor {
   Foreground = "foreground",
@@ -46,7 +46,7 @@ const DashoardPage = () => {
     error: dayError,
     isLoading: dayIsLoading,
     refetch: dayRefetch,
-  } = useGetDaysQuery("Wednesday");
+  } = useGetDayQuery();
   const [updateTarget, { isError, isSuccess }] = useUpdatetargetMutation();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -70,9 +70,9 @@ const DashoardPage = () => {
   }, [user]);
 
   useEffect(() => {
-    if (day?.data[0] && user?.data) {
-      let proteins = day?.data[0].totalProteins;
-      let proteinVal = (proteins / user?.data?.targetProteins) * 100;
+    if (day?.data && user?.data) {
+      let proteins: number = day?.data.totalProteins;
+      let proteinVal: number = (proteins / user?.data?.targetProteins) * 100;
       if (proteinVal < 50) {
         setProteinColor(sliderColor.Danger);
       } else if (proteinVal >= 50 && proteinVal < 80) {
@@ -81,7 +81,7 @@ const DashoardPage = () => {
         setProteinColor(sliderColor.Success);
       }
 
-      let calories = day?.data[0].totalCalories;
+      let calories = day?.data.totalCalories;
       let caloriesVal = (calories / user?.data?.targetCalories) * 100;
       if (caloriesVal < 50) {
         setCalorieColor(sliderColor.Danger);
@@ -147,14 +147,13 @@ const DashoardPage = () => {
             <div>
               <div className="flex gap-40">
                 <span>Target Proteins:</span>
-                <span>{`${day?.data[0]?.totalProteins}/${user?.data?.targetProteins}`}</span>
+                <span>{`${day?.data?.totalProteins}/${user?.data?.targetProteins}`}</span>
               </div>
               <Slider
                 isDisabled
                 color={proteinColor}
                 maxValue={user?.data?.targetProteins}
-                value={day?.data[0]?.totalProteins}
-                defaultValue={0.4}
+                value={day?.data?.totalProteins}
                 className="max-w-md"
                 classNames={{ label: "text-white" }}
               />
@@ -163,14 +162,13 @@ const DashoardPage = () => {
             <div>
               <div className="flex gap-40">
                 <span>Target Calories:</span>
-                <span>{`${day?.data[0]?.totalCalories}/${user?.data?.targetCalories}`}</span>
+                <span>{`${day?.data?.totalCalories}/${user?.data?.targetCalories}`}</span>
               </div>
               <Slider
                 isDisabled
                 color={calorieColor}
                 maxValue={user?.data?.targetCalories}
-                value={day?.data[0]?.totalCalories}
-                defaultValue={0.4}
+                value={day?.data?.totalCalories}
                 className="max-w-md"
                 classNames={{ label: "text-white" }}
               />

@@ -1,7 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { RootState } from "../store";
-import { IMeal } from "@/types/mealTypes";
-import { ITarget } from "@/types/dayTypes";
 
 export const daysApi = createApi({
   reducerPath: "daysApi",
@@ -18,10 +15,13 @@ export const daysApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getDays: builder.query<any, string>({
-      query: (day) => `days/list?search=${day}`,
+    getDaysList: builder.query<any, void>({
+      query: () => `days/list`,
+    }),
+    getDay: builder.query<any, void>({
+      query: () => `days/day`,
     }),
   }),
 });
 
-export const { useGetDaysQuery } = daysApi;
+export const { useGetDaysListQuery, useGetDayQuery } = daysApi;

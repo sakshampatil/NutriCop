@@ -1,4 +1,5 @@
-import React, { Dispatch, Fragment, SetStateAction, useState } from "react";
+"use client";
+import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,9 +13,9 @@ import { BiLogOut } from "react-icons/bi";
 
 import cn from "classnames";
 import { signOut, useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import logo from "../../../assets/calories tracker logo.png";
 import { Button } from "@nextui-org/button";
-import { useRouter } from "next/navigation";
 
 const sideContent = [
   {
@@ -49,13 +50,16 @@ type props = {
   setCollapsed: Dispatch<SetStateAction<boolean>>;
 };
 const Sidebar = ({ collapsed, setCollapsed }: props) => {
-  // const [collapsed, setCollapsed] = useState<boolean>(false);
-  const router = useRouter();
+  // const session = await getServerSession();
   const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log("SESSION =", session);
+    return () => {};
+  }, [session]);
 
   const logout = () => {
     signOut({ callbackUrl: "/" });
-    // router.push("/");
   };
 
   return (
@@ -113,7 +117,7 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
           </div>
         </div>
         {/* Footer */}
-        <div className="mb-16">
+        <div className="mb-16 flex justify-center">
           {/* user */}
           {collapsed ? (
             <div className="flex flex-col gap-5">
@@ -122,8 +126,8 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
                   <img
                     src={session?.user?.image}
                     alt="Profile pic"
-                    width={42}
-                    height={42}
+                    width={32}
+                    height={32}
                     className="rounded-full"
                   />
                 )}
@@ -134,21 +138,20 @@ const Sidebar = ({ collapsed, setCollapsed }: props) => {
             </div>
           ) : (
             <div className="flex flex-col items-center gap-5">
-              <div className="flex gap-2 items-center">
-                <div>
+              <div className="flex gap-1 items-center justify-center">
+                {/* <div>
                   {session?.user?.image && (
                     <img
                       src={session?.user?.image}
                       alt="Profile pic"
-                      width={42}
-                      height={42}
+                      width={32}
                       className="rounded-full"
                     />
                   )}
-                </div>
+                </div> */}
                 <div className="flex flex-col">
-                  <span>{session?.user?.name}</span>
-                  <span className="text-xs text-blue-500">{session?.user?.email}</span>
+                  <span className="text-medium font-semibold">{session?.user?.name}</span>
+                  {/* <span className="text-xs text-blue-500">{session?.user?.email}</span> */}
                 </div>
               </div>
               <div>

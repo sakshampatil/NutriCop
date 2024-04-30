@@ -1,5 +1,5 @@
 "use client";
-import { useGetDaysQuery } from "@/store/services/days";
+import { useGetDaysListQuery } from "@/store/services/days";
 import React, { Fragment, useState } from "react";
 import cn from "classnames";
 
@@ -18,7 +18,7 @@ const DaysPage = () => {
     error: dayError,
     isLoading: dayIsLoading,
     refetch: dayRefetch,
-  } = useGetDaysQuery("");
+  } = useGetDaysListQuery();
 
   const [today, setToday] = useState(new Date().getDay());
 
@@ -58,7 +58,6 @@ const DaysPage = () => {
     }
   };
 
-  console.log("DAYS =", days);
   return (
     <Fragment>
       <h1 className="text-5xl font-semibold">Week</h1>

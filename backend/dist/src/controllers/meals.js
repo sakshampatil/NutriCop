@@ -7,12 +7,7 @@ const responseHandler_1 = require("../service/responseHandler");
 const meals_1 = require("../schema/meals");
 const days_1 = require("../schema/days");
 const drizzle_orm_1 = require("drizzle-orm");
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const getToday = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    return daysOfWeek[dayOfWeek];
-};
+const helper_1 = require("../service/helper");
 const create = async (req, res, next) => {
     try {
         const body = req.body;
@@ -20,7 +15,7 @@ const create = async (req, res, next) => {
         if (!body.mealNo || !body.proteins || !body.calories || !body.userId) {
             throw new errorHandler_1.BadRequest("Bad Request!");
         }
-        const today = getToday();
+        const today = (0, helper_1.getToday)();
         const insertedMeal = await db_1.db.insert(meals_1.meals).values(Object.assign({ day: today }, body));
         await db_1.db
             .update(days_1.days)
@@ -38,7 +33,7 @@ const create = async (req, res, next) => {
 exports.create = create;
 const list = async (req, res, next) => {
     try {
-        const today = getToday();
+        const today = (0, helper_1.getToday)();
         let morningArry = await db_1.db
             .select()
             .from(meals_1.meals)
@@ -117,7 +112,7 @@ const deleteMeal = async (req, res, next) => {
         let meal = await db_1.db.query.meals.findFirst({
             where: (0, drizzle_orm_1.eq)(meals_1.meals.id, Number(params.id)),
         });
-        const today = getToday();
+        const today = (0, helper_1.getToday)();
         await db_1.db
             .update(days_1.days)
             .set({
