@@ -8,8 +8,6 @@ import { useGetUserQuery } from "@/store/services/auth";
 import { FaRegFaceMeh, FaRegFaceSmileBeam, FaRegFaceTired } from "react-icons/fa6";
 import { RxQuestionMarkCircled } from "react-icons/rx";
 
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 const DaysPage = () => {
   const { data: user } = useGetUserQuery({});
 

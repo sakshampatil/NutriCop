@@ -2,7 +2,11 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { routes } from "./routes";
+import { weeklySchedule } from "./schedule";
 dotenv.config();
+
+//weekly scheduled cron job
+weeklySchedule();
 
 const app = express();
 app.use(cors());

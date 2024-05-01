@@ -1,10 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getToday = void 0;
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+exports.getToday = exports.daysOfWeek = void 0;
+exports.daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+];
 const getToday = () => {
     const today = new Date();
     const dayOfWeek = today.getDay();
-    return daysOfWeek[dayOfWeek];
+    const day = dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
+    return exports.daysOfWeek[day];
 };
 exports.getToday = getToday;
