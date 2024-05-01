@@ -6,6 +6,6 @@ exports.users = (0, pg_core_1.pgTable)("users", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
     name: (0, pg_core_1.varchar)("name", { length: 50 }).notNull(),
     email: (0, pg_core_1.varchar)("email", { length: 50 }).notNull().unique(),
-    targetProteins: (0, pg_core_1.integer)("target_proteins"),
-    targetCalories: (0, pg_core_1.integer)("target_calories"),
+    targetProteins: (0, pg_core_1.integer)("target_proteins").default(50),
+    targetCalories: (0, pg_core_1.integer)("target_calories").default(1800),
 });
