@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 
 import { Button } from "@nextui-org/button";

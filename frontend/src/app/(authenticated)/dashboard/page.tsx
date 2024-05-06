@@ -1,23 +1,12 @@
 "use client";
 import React, { Fragment, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Sidebar from "@/components/sidebar/Sidebar";
-import { setUser } from "@/store/features/authSlice";
-import { useAppDispatch } from "@/store/hooks";
-import { IUser } from "@/types/authTypes";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@nextui-org/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Slider } from "@nextui-org/slider";
 
@@ -37,9 +26,6 @@ enum sliderColor {
 }
 
 const DashoardPage = () => {
-  const { data: session, status, update } = useSession();
-  // const dispatch = useAppDispatch();
-
   const { data: user, error, isLoading, refetch } = useGetUserQuery({});
   const {
     data: day,
@@ -53,14 +39,6 @@ const DashoardPage = () => {
 
   const [proteinColor, setProteinColor] = useState<sliderColor>(sliderColor.Foreground);
   const [calorieColor, setCalorieColor] = useState<sliderColor>(sliderColor.Foreground);
-
-  // useEffect(() => {
-  //   if (session?.user) {
-  //     const data: IUser = session?.user;
-  //     dispatch(setUser({ data }));
-  //   }
-  //   console.log("SESSS =", session);
-  // }, [session]);
 
   useEffect(() => {
     if (user?.data?.targetCalories === null || user?.data?.targetProteins === null) {

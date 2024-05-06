@@ -1,3 +1,4 @@
+"use client";
 import { Fragment } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import { Button } from "@nextui-org/button";

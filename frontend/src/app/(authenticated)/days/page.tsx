@@ -64,6 +64,7 @@ const DaysPage = () => {
         <div className="flex mt-36 justify-evenly">
           {days?.data?.map((day: IDay, index: number) => (
             <Card
+              key={day.id}
               className={cn({
                 "w-32 h-full": true,
                 "border-2": (today - 1 === -1 ? 6 : today - 1) === index ? true : false,

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
 import { IMeal } from "@/types/mealTypes";
-import { ITarget } from "@/types/dayTypes";
+import { ITarget } from "@/types/authTypes";
 
 export const authApi = createApi({
   reducerPath: "authApi",
