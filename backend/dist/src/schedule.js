@@ -33,7 +33,6 @@ const weeklySchedule = () => {
             .catch((error) => {
             console.error("Error occurred during API calls:", error);
         });
-        console.log("USERSssss =", users);
     });
 };
 exports.weeklySchedule = weeklySchedule;
